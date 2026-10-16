@@ -2,7 +2,14 @@ int Arriba;
 int Izquierda;
 int Abajo;
 int Derecha;
-float v = 3;
+
+float v = 20;
+int maxDisparos = 20;
+float[] disparosX = new float[maxDisparos];
+float[] disparosY = new float[maxDisparos];
+float velDisp = 20;
+
+boolean[] balaAct = new boolean[maxDisparos];
 
 void keyPressed() {
   if (key == 'w' || key == 'W' || keyCode == UP) {
@@ -16,6 +23,16 @@ void keyPressed() {
   }
   if (key == 'd' || key == 'D' || keyCode == RIGHT) {
     Derecha = 1;
+  }
+  if (key == ' ') {
+    for (int i = 0; i< maxDisparos; i++) {
+      if (balaAct[i] == false) {
+        balaAct[i] = true;
+        disparosX[i] = x;
+        disparosY[i] =y;
+        break;
+      }
+    }
   }
 }
 
