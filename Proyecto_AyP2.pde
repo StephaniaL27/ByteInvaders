@@ -9,17 +9,25 @@ float pantalla = 1;
 float x;
 float y;
 
+PImage[] frames = new PImage[8];
+int frameActual = 0;
+
 void setup() {
   fullScreen();
   imageMode(CENTER);
-
+  noSmooth();                      // evita que el pixel art se vea borroso
   fondo_estrellas = loadImage("fondo_estrellas.png");
   titulo_menu = loadImage("titulo_byteinvaders.png");
   for (int i = 0; i< planetas.length; i++) {
-    planetas[i] = loadImage("planeta"+i+".png");
+    planetas[i] = loadImage("planeta" + i + ".png");
   }
   estrellasf = loadImage("estrellasf.png");
+
   nave = loadImage("nave.png");
+  for (int i = 0; i < 8; i++) {
+    frames[i] = nave.get(i * 64, 0, 64, 64);   // recorta cada cuadro de 64x64
+  }
+  frameRate(60);
 
   font_botones_r = createFont("font_botones_r.ttf", 42);
   x = width / 2;
@@ -39,9 +47,16 @@ void draw() {
   if (pantalla == 1) {
 
     apariencia_menu();
-  } else if (pantalla == 2)
-    image(nave, x, y, 100, 100);
+  } else if (pantalla == 2) {
+    // cambia de cuadro cada 6 ticks (~10 fps)
+  if (frameCount % 6 == 0) {
+    frameActual = (frameActual + 1) % 8;
+  }
 
+  // dibuja la nave en su posición actual, escalada x3
+  imageMode(CENTER);
+  image(frames[frameActual], x, y, 64 * 3, 64 * 3);
+ }
   for (int i = 0; i < maxDisparos; i++) {
     if (balaAct[i]) {
       fill(#4080d2);
@@ -69,16 +84,16 @@ void draw() {
 
   // Para definir el espacio en el que la nave pueda moverse,
 
-  if (y == 0) {
+  if (y <= 32) {
     y = y + v;
   }
-  if (x == 0) {
+  if (x <= 32) {
     x = x + v;
   }
-  if (y == height) {
+  if (y >= height - 32) {
     y = y - v;
   }
-  if (x == width) {
+  if (x >= width - 32) {
     x = x - v;
   }
 }
