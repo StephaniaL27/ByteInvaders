@@ -1,75 +1,103 @@
-PImage[] planetas = new PImage[4];
-PImage fondo_estrellas;
+// ---------- Imágenes del menú ----------
 PImage titulo_menu;
+
+// ---------- Fondo animado (el del juego) ----------
+PImage fondo;
+PImage[] estrellas = new PImage[8];
+float fondoY = 0;
+float velFondo = 0.5;        // más alto = más rápido
+int frameEstrellas = 0;
+int velTitileo = 10;         // menor = titileo más rápido
+
+// ---------- Nave ----------
 PImage nave;
-PImage estrellasf;
-
-float pantalla = 1;
-
-float x;
-float y;
-
 PImage[] frames = new PImage[8];
 int frameActual = 0;
+float x, y;
+
+float pantalla = 1;
 
 void setup() {
   fullScreen();
   imageMode(CENTER);
-  noSmooth();                      // evita que el pixel art se vea borroso
-  fondo_estrellas = loadImage("fondo_estrellas.png");
-  titulo_menu = loadImage("titulo_byteinvaders.png");
-  for (int i = 0; i< planetas.length; i++) {
-    planetas[i] = loadImage("planeta" + i + ".png");
-  }
-  estrellasf = loadImage("estrellasf.png");
-
-  nave = loadImage("nave.png");
-  for (int i = 0; i < 8; i++) {
-    frames[i] = nave.get(i * 64, 0, 64, 64);   // recorta cada cuadro de 64x64
-  }
+  noSmooth();  // evita que el pixel art se vea borroso
   frameRate(60);
+  
+  cargarImagenes();
 
   font_botones_r = createFont("font_botones_r.ttf", 42);
   x = width / 2;
   y = height - 200;
+  
   //Botones del menú
   float distancia = 80;
   for (int i = 0; i < textoBotones.length; i++) {
-    botones_menu[i] = new Botones();
+    botones_menu[i] = new Boton();
     botonX[i] = width/2;
-    botonY[i] = 480+i*distancia;
+    botonY[i] = 480  +  i*distancia;
+  }
+}
+
+void cargarImagenes() {
+  titulo_menu = loadImage("titulo_byteinvaders.png");
+  
+  nave = loadImage("nave.png");
+  for (int i = 0; i < 8; i++) {
+    frames[i] = nave.get(i * 64, 0, 64, 64);  // recorta cada cuadro de 64x64
+  }
+  
+  fondo = loadImage("fondo_loop_1920x1080.png");
+  for (int i = 0; i < estrellas.length; i++) {
+    estrellas[i] = loadImage("estrellas_" + i + ".png");
   }
 }
 
 void draw() {
   background(#010005);
-  image(fondo_estrellas, width/2, height/2, width-20, height-20);
+  
+  if (pantalla == 2) {
+    fondoY += velFondo;
+  } else {
+    fondoY = height / 2;
+  }
+  dibujarFondo(fondoY);
+  
+  // contenido de cada pantalla
   if (pantalla == 1) {
-
     apariencia_menu();
   } else if (pantalla == 2) {
-    // cambia de cuadro cada 6 ticks (~10 fps)
+    dibujarNave();
+    moverNave();
+    dibujarDisparos();
+ }
+}
+
+void dibujarFondo(float fondoY) {
+  imageMode(CORNER);
+  if (fondoY >= height) fondoY -= height;
+  int yy = int(fondoY);
+
+  if (frameCount % velTitileo == 0) {
+    frameEstrellas = (frameEstrellas + 1) % estrellas.length;
+  }
+
+  image(fondo, 0, yy, width, height);
+  image(fondo, 0, yy - height, width, height);
+  image(estrellas[frameEstrellas], 0, yy, width, height);
+  image(estrellas[frameEstrellas], 0, yy - height, width, height);
+
+  imageMode(CENTER);   // vuelve al modo que usa todo lo demás
+}
+
+void dibujarNave() {
   if (frameCount % 6 == 0) {
     frameActual = (frameActual + 1) % 8;
   }
+  image(frames[frameActual], x, y, 64*2, 64*2);
+}
 
-  // dibuja la nave en su posición actual, escalada x3
-  imageMode(CENTER);
-  image(frames[frameActual], x, y, 64 * 3, 64 * 3);
- }
-  for (int i = 0; i < maxDisparos; i++) {
-    if (balaAct[i]) {
-      fill(#4080d2);
-      rect(disparosX[i], disparosY[i], 5, 20);
-      disparosY[i] -= velDisp;
-    }
-
-    if (disparosY[i] < 0) {
-      balaAct[i] = false;
-    }
-  }
-
-  if (Arriba == 1) {
+void moverNave() {
+    if (Arriba == 1) {
     y = y - v;
   }
   if (Izquierda == 1) {
@@ -82,8 +110,7 @@ void draw() {
     x = x + v;
   }
 
-  // Para definir el espacio en el que la nave pueda moverse,
-
+  // límites de pantalla
   if (y <= 32) {
     y = y + v;
   }
@@ -98,6 +125,18 @@ void draw() {
   }
 }
 
+void dibujarDisparos() {
+  for (int i = 0; i < maxDisparos; i++) {
+    if (balaAct[i]) {
+      fill(#4080d2);
+      rect(disparosX[i], disparosY[i], 5, 20);
+      disparosY[i] -= velDisp;
+    }
+    if (disparosY[i] < 0) {
+      balaAct[i] = false;
+    }
+  }
+}
 
 void mousePressed() {
   if (pantalla == 1) {
@@ -115,13 +154,13 @@ void mousePressed() {
           pantalla = 2;
           break;
         case 1:
-          pantalla=3;
+          pantalla = 3;
           break;
         case 2:
-          pantalla=4;
+          pantalla = 4;
           break;
         case 3:
-          pantalla=5;
+          pantalla = 5;
           break;
         }
       }
