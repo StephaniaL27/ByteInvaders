@@ -1,20 +1,15 @@
 PFont font_botones_r;
-
 float rad = 51;
-
 float[] brillo =  new float[4];
 
-class Botones {
-
+class Boton {
   float nivelBrillo = 0;
   float velocidadBrillo = 250;
-
   void dibujarBoton(float x, float y, float ancho, float alto, String contenido) {
 
     rectMode(CENTER);
     textAlign(CENTER, CENTER);
     textFont(font_botones_r, 42);
-
     boolean overButton = (
       mouseX >= x - ancho / 2 &&
       mouseX <= x + ancho / 2 &&
@@ -27,7 +22,6 @@ class Botones {
     } else {
       nivelBrillo -= velocidadBrillo;
     }
-
     if (nivelBrillo > 255) {
       nivelBrillo = 255;
     }
