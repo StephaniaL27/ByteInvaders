@@ -15,6 +15,15 @@ PImage[] frames = new PImage[8];
 int frameActual = 0;
 float x, y;
 
+// ---------- Interfaz ----------
+Pantallas gestorPantallas;
+
+// --- Variables de Ajustes y pausa---
+int dificultad = 2;     // 1: Facil, 2: Normal, 3: Dificil
+int velocidadNave = 2;  // 1: Lenta, 2: Normal, 3: Rapida
+String modoJuego = "HISTORIA"; // Fijo
+boolean juegoPausado = false;
+
 float pantalla = 1;
 
 void setup() {
@@ -22,7 +31,7 @@ void setup() {
   imageMode(CENTER);
   noSmooth();  // evita que el pixel art se vea borroso
   frameRate(60);
-  
+  gestorPantallas = new Pantallas();
   cargarImagenes();
 
   font_botones_r = createFont("font_botones_r.ttf", 42);
@@ -55,9 +64,9 @@ void cargarImagenes() {
 void draw() {
   background(#010005);
   
-  if (pantalla == 2) {
+  if (pantalla == 2 && !juegoPausado) {
     fondoY += velFondo;
-  } else {
+  } else if (pantalla != 2 ){
     fondoY = height / 2;
   }
   dibujarFondo(fondoY);
@@ -69,6 +78,16 @@ void draw() {
     dibujarNave();
     moverNave();
     dibujarDisparos();
+    gestorPantallas.dibujarBotonPausaHUD();
+       if (juegoPausado) {
+       gestorPantallas.dibujarVentanaPausa();
+       }
+ } else if (pantalla == 3) {
+  gestorPantallas.dibujarHowToPlay();
+ } else if (pantalla == 4) {
+  gestorPantallas.dibujarSettings();
+ } else if (pantalla == 5) {
+  gestorPantallas.dibujarCredits();
  }
 }
 
@@ -90,13 +109,16 @@ void dibujarFondo(float fondoY) {
 }
 
 void dibujarNave() {
+if (!juegoPausado){
   if (frameCount % 6 == 0) {
     frameActual = (frameActual + 1) % 8;
   }
+}
   image(frames[frameActual], x, y, 64*2, 64*2);
 }
 
 void moverNave() {
+if (juegoPausado)return;
     if (Arriba == 1) {
     y = y - v;
   }
@@ -130,7 +152,9 @@ void dibujarDisparos() {
     if (balaAct[i]) {
       fill(#4080d2);
       rect(disparosX[i], disparosY[i], 5, 20);
+      if (!juegoPausado){
       disparosY[i] -= velDisp;
+      }
     }
     if (disparosY[i] < 0) {
       balaAct[i] = false;
@@ -164,6 +188,64 @@ void mousePressed() {
           break;
         }
       }
+    }
+  }else if (pantalla == 2) {
+    float bx = width - 70;
+    float by = 45;
+    
+    // Clic en el botón || PAUSE
+    if (mouseX >= bx - 45 && mouseX <= bx + 45 && mouseY >= by - 20 && mouseY <= by + 20) {
+      juegoPausado = !juegoPausado;
+      return;
+    }
+
+    if (juegoPausado) {
+      float btnY1 = height/2 + 5;
+      float btnY2 = height/2 + 65;
+
+      if (mouseX >= width/2 - 100 && mouseX <= width/2 + 100 && mouseY >= btnY1 - 22 && mouseY <= btnY1 + 22) {
+        juegoPausado = false; // CONTINUE
+      }
+      
+      if (mouseX >= width/2 - 100 && mouseX <= width/2 + 100 && mouseY >= btnY2 - 22 && mouseY <= btnY2 + 22) {
+        juegoPausado = false;
+        pantalla = 1; // HOME
+      }
+    }
+  } else if (pantalla == 4) {
+    float startX = width/2 - 260;
+    
+    // Clics Dificultad
+    if (mouseY >= height/2 - 80 - 19 && mouseY <= height/2 - 80 + 19) {
+      if (mouseX >= startX + 180 - 50 && mouseX <= startX + 180 + 50) dificultad = 1;
+      if (mouseX >= startX + 295 - 55 && mouseX <= startX + 295 + 55) dificultad = 2;
+      if (mouseX >= startX + 420 - 55 && mouseX <= startX + 420 + 55) dificultad = 3;
+    }
+    
+    // Clics Velocidad
+    if (mouseY >= height/2 - 19 && mouseY <= height/2 + 19) {
+      if (mouseX >= startX + 180 - 50 && mouseX <= startX + 180 + 50) {
+        velocidadNave = 1;
+        v = 10;
+      }
+      if (mouseX >= startX + 295 - 55 && mouseX <= startX + 295 + 55) {
+        velocidadNave = 2;
+        v = 20;
+      }
+      if (mouseX >= startX + 420 - 55 && mouseX <= startX + 420 + 55) {
+        velocidadNave = 3;
+        v = 30;
+      }
+    }
+    
+    // Botón BACK
+    if (mouseX >= width/2 - 80 && mouseX <= width/2 + 80 && mouseY >= height - 125 && mouseY <= height - 75) {
+      pantalla = 1; 
+    }
+  } else if (pantalla == 3 || pantalla == 5) {
+    // Botón BACK
+    if (mouseX >= width/2 - 80 && mouseX <= width/2 + 80 && mouseY >= height - 125 && mouseY <= height - 75) {
+      pantalla = 1; 
     }
   }
 }
