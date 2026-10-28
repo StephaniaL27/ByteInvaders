@@ -12,6 +12,12 @@ float velDisp = 20;
 boolean[] balaAct = new boolean[maxDisparos];
 
 void keyPressed() {
+// Tecla para pausar el juego
+  if (keyCode == ENTER) {
+    if (pantalla == 2) {
+      juegoPausado = !juegoPausado;
+    }
+  }
   if (key == 'w' || key == 'W' || keyCode == UP) {
     Arriba = 1;
   }
