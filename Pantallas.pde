@@ -23,7 +23,7 @@ class Pantallas {
     textSize(17);
     text("- Moverte: Teclas W, A, S, D  o  Flechas de direccion", width/2, height/2 - 118);
     text("- Disparar / Accion: Barra Espaciadora", width/2, height/2 - 90);
-    text("- Pausar: Tecla ENTER o Boton || PAUSE (Arriba a la derecha)", width/2, height/2 - 62);
+    text("- Pausar: Tecla ENTER o Boton || PAUSE ", width/2, height/2 - 62);
 
     fill(#00FFFF);
     textSize(20);
@@ -37,10 +37,10 @@ class Pantallas {
     text("NAVES VERDES -> Interceptalas para sumar puntos.", width/2, height/2 + 55);
 
     fill(#FF4444);
-    text("NAVES ROJAS -> Bloquealas o reportalas disparando.", width/2, height/2 + 88);
+    text("NAVES ROJAS -> Bloquear o reportar disparando.", width/2, height/2 + 88);
 
     fill(#AAAAAA);
-    text("NAVES GRISES -> Esquivalas para no perder tiempo.", width/2, height/2 + 121);
+    text("NAVES GRISES -> Distracciones esquivarlas.", width/2, height/2 + 121);
 
     fill(#FFE600);
     textSize(16);
@@ -126,9 +126,9 @@ class Pantallas {
 
     fill(255);
     textSize(18);
-    text("Stephania Lamadrid ", width/2, height/2 - 15);
-    text("Matias Guarin ", width/2, height/2 + 30);
-    text("Natalia Herrera ", width/2, height/2 + 75);
+    text("Stephania Lamadrid", width/2, height/2 - 15);
+    text("Matias Guarin", width/2, height/2 + 30);
+    text("Natalia Herrera", width/2, height/2 + 75);
 
     fill(#888888);
     textSize(16);
