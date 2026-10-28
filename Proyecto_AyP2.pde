@@ -9,6 +9,7 @@ float velFondo = 0.5;        // más alto = más rápido
 int frameEstrellas = 0;
 int velTitileo = 10;         // menor = titileo más rápido
 
+<<<<<<< Updated upstream
 // ---------- Nave ----------
 PImage nave;
 PImage[] frames = new PImage[8];
@@ -23,6 +24,12 @@ int dificultad = 2;     // 1: Facil, 2: Normal, 3: Dificil
 int velocidadNave = 2;  // 1: Lenta, 2: Normal, 3: Rapida
 String modoJuego = "HISTORIA"; // Fijo
 boolean juegoPausado = false;
+=======
+// ---------- Naves ----------
+PImage nave;
+PImage nave_roja;
+
+>>>>>>> Stashed changes
 
 float pantalla = 1;
 
@@ -31,7 +38,11 @@ void setup() {
   imageMode(CENTER);
   noSmooth();  // evita que el pixel art se vea borroso
   frameRate(60);
+<<<<<<< Updated upstream
   gestorPantallas = new Pantallas();
+=======
+  
+>>>>>>> Stashed changes
   cargarImagenes();
 
   font_botones_r = createFont("font_botones_r.ttf", 42);
@@ -51,9 +62,13 @@ void cargarImagenes() {
   titulo_menu = loadImage("titulo_byteinvaders.png");
   
   nave = loadImage("nave.png");
+<<<<<<< Updated upstream
   for (int i = 0; i < 8; i++) {
     frames[i] = nave.get(i * 64, 0, 64, 64);  // recorta cada cuadro de 64x64
   }
+=======
+  nave_roja = loadImage("nave_roja.png");
+>>>>>>> Stashed changes
   
   fondo = loadImage("fondo_loop_1920x1080.png");
   for (int i = 0; i < estrellas.length; i++) {
@@ -64,9 +79,15 @@ void cargarImagenes() {
 void draw() {
   background(#010005);
   
+<<<<<<< Updated upstream
   if (pantalla == 2 && !juegoPausado) {
     fondoY += velFondo;
   } else if (pantalla != 2 ){
+=======
+  if (pantalla == 2) {
+    fondoY += velFondo;
+  } else {
+>>>>>>> Stashed changes
     fondoY = height / 2;
   }
   dibujarFondo(fondoY);
@@ -75,6 +96,7 @@ void draw() {
   if (pantalla == 1) {
     apariencia_menu();
   } else if (pantalla == 2) {
+<<<<<<< Updated upstream
     dibujarNave();
     moverNave();
     dibujarDisparos();
@@ -162,6 +184,14 @@ void dibujarDisparos() {
   }
 }
 
+=======
+    dibujarNaves(nave, x, y);
+    moverNave();
+    dibujarDisparos();
+ }
+}
+
+>>>>>>> Stashed changes
 void mousePressed() {
   if (pantalla == 1) {
     for (int i=0; i<textoBotones.length; i++) {

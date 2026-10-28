@@ -56,3 +56,45 @@ void keyReleased() {
     Derecha = 0;
   }
 }
+
+void moverNave() {
+  if (Arriba == 1) {
+    y = y - v;
+  }
+  if (Izquierda == 1) {
+    x = x - v;
+  }
+  if (Abajo == 1) {
+    y = y + v;
+  }
+  if (Derecha == 1) {
+    x = x + v;
+  }
+
+  // límites de pantalla
+  if (y <= 32) {
+    y = y + v;
+  }
+  if (x <= 32) {
+    x = x + v;
+  }
+  if (y >= height - 32) {
+    y = y - v;
+  }
+  if (x >= width - 32) {
+    x = x - v;
+  }
+}
+
+void dibujarDisparos() {
+  for (int i = 0; i < maxDisparos; i++) {
+    if (balaAct[i]) {
+      fill(#4080d2);
+      rect(disparosX[i], disparosY[i], 5, 20);
+      disparosY[i] -= velDisp;
+    }
+    if (disparosY[i] < 0) {
+      balaAct[i] = false;
+    }
+  }
+}

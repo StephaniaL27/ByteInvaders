@@ -23,3 +23,23 @@ void apariencia_menu() {
   for (int i = 0; i < textoBotones.length; i++) {
   }
 }
+<<<<<<< Updated upstream
+=======
+
+void dibujarFondo(float fondoY) {
+  imageMode(CORNER);
+  if (fondoY >= height) fondoY -= height;
+  int yy = int(fondoY);
+
+  if (frameCount % velTitileo == 0) {
+    frameEstrellas = (frameEstrellas + 1) % estrellas.length;
+  }
+
+  image(fondo, 0, yy, width, height);
+  image(fondo, 0, yy - height, width, height);
+  image(estrellas[frameEstrellas], 0, yy, width, height);
+  image(estrellas[frameEstrellas], 0, yy - height, width, height);
+
+  imageMode(CENTER);   // vuelve al modo que usa todo lo demás
+}
+>>>>>>> Stashed changes
