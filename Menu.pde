@@ -23,8 +23,6 @@ void apariencia_menu() {
   for (int i = 0; i < textoBotones.length; i++) {
   }
 }
-<<<<<<< Updated upstream
-=======
 
 void dibujarFondo(float fondoY) {
   imageMode(CORNER);
@@ -42,4 +40,3 @@ void dibujarFondo(float fondoY) {
 
   imageMode(CENTER);   // vuelve al modo que usa todo lo demás
 }
->>>>>>> Stashed changes

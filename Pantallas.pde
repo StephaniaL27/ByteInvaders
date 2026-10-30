@@ -12,39 +12,43 @@ class Pantallas {
     textAlign(CENTER, CENTER);
     fill(#FFE600);
     textFont(font_botones_r);
-    textSize(38);
-    text("HOW TO PLAY", width/2, height/2 - 210);
+    textSize(100);
+    text("HOW TO PLAY", width/2, height/2 - 250);
 
     fill(#00FFFF);
-    textSize(20);
-    text("CONTROLES", width/2, height/2 - 150);
-    
-    fill(255);
-    textSize(17);
-    text("- Moverte: Teclas W, A, S, D  o  Flechas de direccion", width/2, height/2 - 118);
-    text("- Disparar / Accion: Barra Espaciadora", width/2, height/2 - 90);
-    text("- Pausar: Tecla ENTER o Boton || PAUSE ", width/2, height/2 - 62);
+    textSize(50);
+    text("CONTROLES", width/2, height/2 - 170);
 
+    textAlign(LEFT, CENTER);
+    fill(255);
+    textSize(25);
+    text("- Moverte: Teclas W, A, S, D  o  Flechas de direccion", width/2 - 300, height/2 - 120);
+    text("- Disparar / Accion: Barra Espaciadora", width/2 -300, height/2 - 90);
+    text("- Pausar: Tecla ENTER o Boton || PAUSE ", width/2 -300, height/2 - 60);
+
+    textAlign(CENTER, CENTER);
     fill(#00FFFF);
-    textSize(20);
-    text("FILTRADO DE MENSAJES Y BIENESTAR DIGITAL", width/2, height/2 - 10);
+    textSize(40);
+    text("FILTRADO DE MENSAJES \nY BIENESTAR DIGITAL", width/2, height/2 + 20);
 
     fill(255);
-    textSize(16);
-    text("Pilota tu nave y filtra el contenido cibernetico que llega a la pantalla:", width/2, height/2 + 20);
+    textSize(25);
+    text("Pilota tu nave y filtra el contenido cibernetico que llega a la pantalla:", width/2, height/2 + 90);
 
+    textAlign(LEFT, CENTER);
     fill(#00FF66);
-    text("NAVES VERDES -> Interceptalas para sumar puntos.", width/2, height/2 + 55);
+    text("NAVES VERDES -> Interceptalas para sumar puntos.", width/2 -300, height/2 + 130);
 
     fill(#FF4444);
-    text("NAVES ROJAS -> Bloquear o reportar disparando.", width/2, height/2 + 88);
+    text("NAVES ROJAS -> Bloquear o reportar disparando.", width/2 -300, height/2 + 160);
 
     fill(#AAAAAA);
-    text("NAVES GRISES -> Distracciones esquivarlas.", width/2, height/2 + 121);
+    text("NAVES GRISES -> Distracciones esquivarlas.", width/2-300, height/2 + 190);
 
+    textAlign(CENTER, CENTER);
     fill(#FFE600);
-    textSize(16);
-    text("¡Mantener el equilibrio cibernetico y supera el puntaje maximo!", width/2, height/2 + 160);
+    textSize(40);
+    text("¡Manten el equilibrio cibernetico y supera el puntaje maximo!", width/2, height/2 + 250);
 
     dibujarBotonBack();
   }
@@ -61,11 +65,11 @@ class Pantallas {
     textAlign(CENTER, CENTER);
     fill(#FFE600);
     textFont(font_botones_r);
-    textSize(38);
+    textSize(100);
     text("SETTINGS", width/2, height/2 - 180);
 
     float startX = width/2 - 260;
-    
+
     // Dificultad
     fill(255);
     textSize(20);
@@ -117,21 +121,21 @@ class Pantallas {
     textAlign(CENTER, CENTER);
     fill(#FFE600);
     textFont(font_botones_r);
-    textSize(38);
+    textSize(100);
     text("CREDITS", width/2, height/2 - 150);
 
     fill(#00FFFF);
-    textSize(22);
-    text("BYTE INVADERS - Equipo 6", width/2, height/2 - 80);
+    textSize(50);
+    text("BYTE INVADERS - Equipo 6", width/2, height/2 - 70);
 
     fill(255);
-    textSize(18);
+    textSize(40);
     text("Stephania Lamadrid", width/2, height/2 - 15);
     text("Matias Guarin", width/2, height/2 + 30);
     text("Natalia Herrera", width/2, height/2 + 75);
 
     fill(#888888);
-    textSize(16);
+    textSize(20);
     text("Algoritmia y Programacion II -- Uninorte 2026", width/2, height/2 + 130);
 
     dibujarBotonBack();
@@ -198,7 +202,7 @@ class Pantallas {
   void dibujarBotonOpcion(float bx, float by, float bw, float bh, String label, boolean seleccionado) {
     rectMode(CENTER);
     boolean mouseSobre = mouseX >= bx - bw/2 && mouseX <= bx + bw/2 && mouseY >= by - bh/2 && mouseY <= by + bh/2;
-    
+
     if (seleccionado) {
       stroke(#00FFFF);
       strokeWeight(2);
@@ -212,7 +216,7 @@ class Pantallas {
       strokeWeight(1);
       fill(20, 25, 45);
     }
-    
+
     rect(bx, by, bw, bh, 8);
     textAlign(CENTER, CENTER);
     textSize(16);
@@ -224,7 +228,7 @@ class Pantallas {
     rectMode(CENTER);
     fill(#0F0F0B);
     rect(width/2, height - 100, 160, 50, 12);
-    
+
     fill(255);
     textAlign(CENTER, CENTER);
     textSize(24);

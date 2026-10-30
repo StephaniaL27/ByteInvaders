@@ -12,7 +12,7 @@ float velDisp = 20;
 boolean[] balaAct = new boolean[maxDisparos];
 
 void keyPressed() {
-// Tecla para pausar el juego
+  // Tecla para pausar el juego
   if (keyCode == ENTER) {
     if (pantalla == 2) {
       juegoPausado = !juegoPausado;
@@ -34,8 +34,8 @@ void keyPressed() {
     for (int i = 0; i< maxDisparos; i++) {
       if (balaAct[i] == false) {
         balaAct[i] = true;
-        disparosX[i] = x;
-        disparosY[i] =y;
+        disparosX[i] = jugador.x;
+        disparosY[i] = jugador.y + 10;
         break;
       }
     }
@@ -59,30 +59,30 @@ void keyReleased() {
 
 void moverNave() {
   if (Arriba == 1) {
-    y = y - v;
+    jugador.y -= v;
   }
   if (Izquierda == 1) {
-    x = x - v;
+    jugador.x -= v;
   }
   if (Abajo == 1) {
-    y = y + v;
+    jugador.y += v;
   }
   if (Derecha == 1) {
-    x = x + v;
+    jugador.x += v;
   }
 
   // límites de pantalla
-  if (y <= 32) {
-    y = y + v;
+  if (jugador.y <= 32) {
+    jugador.y += v;
   }
-  if (x <= 32) {
-    x = x + v;
+  if (jugador.x <= 32) {
+    jugador.x += v;
   }
-  if (y >= height - 32) {
-    y = y - v;
+  if (jugador.y >= height - 32) {
+    jugador.y -= v;
   }
-  if (x >= width - 32) {
-    x = x - v;
+  if (jugador.x >= width - 32) {
+    jugador.x -= v;
   }
 }
 
