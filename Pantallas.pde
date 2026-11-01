@@ -1,7 +1,8 @@
 class Pantallas {
 
   // ---------- Pantalla: How to Play ----------
-  void dibujarHowToPlay() {
+  
+  void DibujarHowToPlay() {
     rectMode(CENTER);
     fill(10, 15, 30, 230);
     stroke(#00FFFF);
@@ -11,7 +12,7 @@ class Pantallas {
 
     textAlign(CENTER, CENTER);
     fill(#FFE600);
-    textFont(font_botones_r);
+    textFont(fuenteBoton);
     textSize(100);
     text("HOW TO PLAY", width/2, height/2 - 250);
 
@@ -50,11 +51,12 @@ class Pantallas {
     textSize(40);
     text("¡Manten el equilibrio cibernetico y supera el puntaje maximo!", width/2, height/2 + 250);
 
-    dibujarBotonBack();
+    dibujarBotonAtras();
   }
 
   // ---------- Pantalla: Settings ----------
-  void dibujarSettings() {
+  
+  void dibujarConfiguracion() {
     rectMode(CENTER);
     fill(10, 15, 30, 230);
     stroke(#00FFFF);
@@ -64,53 +66,58 @@ class Pantallas {
 
     textAlign(CENTER, CENTER);
     fill(#FFE600);
-    textFont(font_botones_r);
+    textFont(fuenteBoton);
     textSize(100);
     text("SETTINGS", width/2, height/2 - 180);
 
-    float startX = width/2 - 260;
+    float inicioX = width/2 - 260;
 
     // Dificultad
+    
     fill(255);
     textSize(20);
     textAlign(LEFT, CENTER);
-    text("Dificultad:", startX, height/2 - 80);
+    text("Dificultad:", inicioX, height/2 - 80);
 
-    dibujarBotonOpcion(startX + 180, height/2 - 80, 100, 38, "FACIL", dificultad == 1);
-    dibujarBotonOpcion(startX + 295, height/2 - 80, 110, 38, "NORMAL", dificultad == 2);
-    dibujarBotonOpcion(startX + 420, height/2 - 80, 110, 38, "DIFICIL", dificultad == 3);
+    dibujarBotonOpcion(inicioX + 180, height/2 - 80, 100, 38, "FACIL", dificultad == 1);
+    dibujarBotonOpcion(inicioX + 295, height/2 - 80, 110, 38, "NORMAL", dificultad == 2);
+    dibujarBotonOpcion(inicioX + 420, height/2 - 80, 110, 38, "DIFICIL", dificultad == 3);
 
     // Velocidad
+    
     fill(255);
     textSize(20);
     textAlign(LEFT, CENTER);
-    text("Velocidad:", startX, height/2);
+    text("Velocidad:", inicioX, height/2);
 
-    dibujarBotonOpcion(startX + 180, height/2, 100, 38, "LENTA", velocidadNave == 1);
-    dibujarBotonOpcion(startX + 295, height/2, 110, 38, "NORMAL", velocidadNave == 2);
-    dibujarBotonOpcion(startX + 420, height/2, 110, 38, "RAPIDA", velocidadNave == 3);
+    dibujarBotonOpcion(inicioX + 180, height/2, 100, 38, "LENTA", Velocidad_nave == 1);
+    dibujarBotonOpcion(inicioX + 295, height/2, 110, 38, "NORMAL", Velocidad_nave == 2);
+    dibujarBotonOpcion(inicioX + 420, height/2, 110, 38, "RAPIDA", Velocidad_nave == 3);
 
     // Modo de Juego (Fijo)
+    
     fill(255);
     textSize(20);
     textAlign(LEFT, CENTER);
-    text("Modo Juego:", startX, height/2 + 80);
+    text("Modo Juego:", inicioX, height/2 + 80);
 
     rectMode(CENTER);
     stroke(#FF7700);
     strokeWeight(2);
     fill(#FF7700, 80);
-    rect(startX + 220, height/2 + 80, 160, 38, 10);
+    rect(inicioX + 220, height/2 + 80, 160, 38, 10);
+    
     fill(#FF7700);
     textAlign(CENTER, CENTER);
     textSize(16);
-    text("HISTORIA", startX + 220, height/2 + 80);
+    text("HISTORIA", inicioX + 220, height/2 + 80);
 
-    dibujarBotonBack();
+    dibujarBotonAtras();
   }
 
   // ---------- Pantalla: Credits ----------
-  void dibujarCredits() {
+  
+  void dibujarCreditos() {
     rectMode(CENTER);
     fill(10, 15, 30, 230);
     stroke(#00FFFF);
@@ -120,7 +127,7 @@ class Pantallas {
 
     textAlign(CENTER, CENTER);
     fill(#FFE600);
-    textFont(font_botones_r);
+    textFont(fuenteBoton);
     textSize(100);
     text("CREDITS", width/2, height/2 - 150);
 
@@ -138,22 +145,29 @@ class Pantallas {
     textSize(20);
     text("Algoritmia y Programacion II -- Uninorte 2026", width/2, height/2 + 130);
 
-    dibujarBotonBack();
+    dibujarBotonAtras();
   }
 
   // ---------- Componentes Auxiliares ----------
-  void dibujarBotonPausaHUD() {
+  
+  void DibujarBotonPausaHUD() {
     float bx = width - 70;
     float by = 45;
     float bw = 90;
     float bh = 40;
 
-    boolean mouseSobre = mouseX >= bx - bw/2 && mouseX <= bx + bw/2 && mouseY >= by - bh/2 && mouseY <= by + bh/2;
+    boolean mouseSobre =
+      mouseX >= bx - bw/2 && mouseX <= bx + bw/2 &&
+      mouseY >= by - bh/2 && mouseY <= by + bh/2;
 
     rectMode(CENTER);
     stroke(#00FFFF);
     strokeWeight(2);
-    fill(mouseSobre ? color(#00FFFF, 80) : color(10, 15, 30, 200));
+    if (mouseSobre) {
+      fill(color(#00FFFF, 80));
+    } else {
+      fill(color(10, 15, 30, 200));
+    }
     rect(bx, by, bw, bh, 10);
 
     fill(#00FFFF);
@@ -179,17 +193,23 @@ class Pantallas {
     text("GAME PAUSED", width/2, height/2 - 75);
 
     float btnY1 = height/2 + 5;
-    boolean overContinue = mouseX >= width/2 - 100 && mouseX <= width/2 + 100 && mouseY >= btnY1 - 22 && mouseY <= btnY1 + 22;
+    boolean overContinue =
+      mouseX >= width/2 - 100 && mouseX <= width/2 + 100 &&
+      mouseY >= btnY1 - 22 && mouseY <= btnY1 + 22;
+      
     stroke(#00FF66);
     strokeWeight(2);
     fill(overContinue ? color(0, 255, 102, 100) : color(10, 30, 20, 200));
     rect(width/2, btnY1, 200, 44, 10);
+    
     fill(#00FF66);
     textSize(20);
     text("CONTINUE", width/2, btnY1 - 2);
 
     float btnY2 = height/2 + 65;
-    boolean overHome = mouseX >= width/2 - 100 && mouseX <= width/2 + 100 && mouseY >= btnY2 - 22 && mouseY <= btnY2 + 22;
+    boolean overHome =
+      mouseX >= width/2 - 100 && mouseX <= width/2 + 100 &&
+      mouseY >= btnY2 - 22 && mouseY <= btnY2 + 22;
     stroke(#FF4444);
     strokeWeight(2);
     fill(overHome ? color(255, 68, 68, 100) : color(30, 10, 10, 200));
@@ -201,7 +221,9 @@ class Pantallas {
 
   void dibujarBotonOpcion(float bx, float by, float bw, float bh, String label, boolean seleccionado) {
     rectMode(CENTER);
-    boolean mouseSobre = mouseX >= bx - bw/2 && mouseX <= bx + bw/2 && mouseY >= by - bh/2 && mouseY <= by + bh/2;
+    boolean mouseSobre =
+      mouseX >= bx - bw/2 && mouseX <= bx + bw/2 &&
+      mouseY >= by - bh/2 && mouseY <= by + bh/2;
 
     if (seleccionado) {
       stroke(#00FFFF);
@@ -224,7 +246,7 @@ class Pantallas {
     text(label, bx, by);
   }
 
-  void dibujarBotonBack() {
+  void dibujarBotonAtras() {
     rectMode(CENTER);
     fill(#0F0F0B);
     rect(width/2, height - 100, 160, 50, 12);
