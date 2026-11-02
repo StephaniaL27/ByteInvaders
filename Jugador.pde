@@ -28,9 +28,10 @@ void keyPressed() {
     abajo = true;
   if (key == 'd' || key == 'D' || keyCode == RIGHT)
     derecha = true;
-
   if (key == ' ')
     espacio = true;
+  if (key == 's' && pantalla == 1.5)
+    pantalla = 2;
 }
 
 void disparar() {
@@ -46,7 +47,7 @@ void disparar() {
 
   if (puedeDisparar && !balaActiva[ultimoDisparo]) {
     sfxLaserShoot.play();
-    
+
     balaActiva[ultimoDisparo] = true;
     disparosX[ultimoDisparo] = Jugador.x;
     disparosY[ultimoDisparo] = Jugador.y;
@@ -85,9 +86,9 @@ void derribarEnemigo() {
       j = 0;
       while (j < maxEnemigos && sw == 0) {
         if (existe[j]) {
-          if (abs(disparosX[i] - enemigo[j].x) <= 48 && abs(disparosY[i] - enemigo[j].y) <= 48){
+          if (abs(disparosX[i] - enemigo[j].x) <= 48 && abs(disparosY[i] - enemigo[j].y) <= 48) {
             sfxExplosion.play();
-            
+
             existe[j] = false;
             balaActiva[i] = false;
             sw = 1;
@@ -100,7 +101,7 @@ void derribarEnemigo() {
   }
 }
 
-void keyReleased()  {
+void keyReleased() {
   if (key == 'w' || key == 'W' || keyCode == UP)
     arriba = false;
   if (key == 'a' || key == 'A' || keyCode == LEFT)
@@ -110,7 +111,7 @@ void keyReleased()  {
   if (key == 'd' || key == 'D' || keyCode == RIGHT)
     derecha = false;
 
-  if(key == ' ')
+  if (key == ' ')
     espacio = false;
 }
 

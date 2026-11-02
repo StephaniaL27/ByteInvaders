@@ -55,7 +55,7 @@ void crearEnemigos() { // Función para crear la lista que contien a los enemigo
       }
 
       enemigoX  = width / 2 - 4 * 128 + j * 128;
-      enemigoY = 64 + i * 128;
+      enemigoY = 200 + i * 128;
 
       enemigo[k] = new Naves(imagenNave, colorNave, enemigoX, enemigoY);
       existe[k] = true;
@@ -110,11 +110,13 @@ int nahIdWin(int i, int t){
   }
   return gojoWon;
 }
+
 int FrameActualC = 0;
 float Xinicial = 100;
 float Y = 70;
 float distanciaC = 50;
 PImage FramesC[] = new PImage[8];
+
 void dibujarVidas() {
   for (int j = 0; j < FramesC.length; j++) {
     FramesC[j] = corazones.get(j * 32, 0, 32, 32);  // recorta cada cuadro de 32x32
