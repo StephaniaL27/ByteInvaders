@@ -31,6 +31,7 @@ class Naves {
     }
     
     image(Frames[FrameActual], x, y, 64 * 2, 64 * 2);
+
   }
 }
 
@@ -109,6 +110,22 @@ int nahIdWin(int i, int t){
   }
   return gojoWon;
 }
+int FrameActualC = 0;
+float Xinicial = 100;
+float Y = 70;
+float distanciaC = 50;
+PImage FramesC[] = new PImage[8];
+void dibujarVidas() {
+  for (int j = 0; j < FramesC.length; j++) {
+    FramesC[j] = corazones.get(j * 32, 0, 32, 32);  // recorta cada cuadro de 32x32
+  }
+  for (int i = 0; i < 3; i++) {
+    if (!JuegoPausado && frameCount % 8 == 0) {
+      FrameActualC = (FrameActualC + 1) % FramesC.length;
+    }
+    image(FramesC[FrameActualC], Xinicial + distanciaC*i, Y, 32  *  2, 32  *  2);
+  }
+}
 
 void dibujarJuego() {
   if (!juegoGanado) {
@@ -148,4 +165,9 @@ void dibujarJuego() {
       GestorPantallas.dibujarVentanaPausa();
     }
   }
+
+  dibujarVidas();
+  fill(#ffffff);
+  textSize(40);
+  text(Puntos, width/2 - 500, 70);
 }

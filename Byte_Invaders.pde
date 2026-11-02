@@ -17,7 +17,7 @@ int Velocidad_titileo = 7;           // Cada cuántos frames cambia el titileo
 
 PFont fuenteBoton;
 Pantallas GestorPantallas;  // Gestor que dibuja las pantallas secundarias
-int pantalla = 1;           // 1: Menú, 2: Juego, 3: How to play, 4: Settings, 5: Credits
+float pantalla = 1;            // 1: Menú, 1.5: Historia, 2: Juego, 3: How to play, 4: Settings, 5: Credits
 
 // ---------- Ajustes y pausa ----------
 
@@ -37,6 +37,7 @@ PImage naveGris;
 int maxEnemigos = 27;
 Naves jugador;
 
+
 // ---------- Vidas ----------
 
 PImage corazones;
@@ -48,6 +49,7 @@ SoundFile sfxExplosion;
 SoundFile sfxVictory;
 SoundFile musicaFondo;
 
+
 void setup() {
   fullScreen();
   imageMode(CENTER);
@@ -56,16 +58,19 @@ void setup() {
   frameRate(60);
 
   fuenteBoton = createFont("font_botones_r.ttf", 42);
+  fuenteHistoria = createFont("font_historia.ttf", 40);
+  cargarImagenes();
+  cargarSonidos();
+
+  capaTexto = createGraphics(width, height);
+
   textFont(fuenteBoton);
 
   GestorPantallas = new Pantallas();
-  cargarImagenes();
-  cargarSonidos();
+  Jugador = new Naves(Nave_jugador, width / 2, height + 64, 0);   // La nave del jugador inicia bajo la pantalla y sube hasta su posición
+  crearEnemigos();
+
   musicaFondo.loop();
-
-  // La nave del jugador inicia bajo la pantalla y sube hasta su posición
-
-  jugador = new Naves(Nave_jugador, 0, width / 2, height + 64);
 
   // Botones del menú, uno debajo del otro
 
@@ -73,22 +78,20 @@ void setup() {
   String temporal;
   for (int i = 0; i < botonesMenu.length; i++) {
     switch(i) {
-      case 0:
-        temporal = "START GAME";
+    case 0:
+      temporal = "START GAME";
       break;
-      case 1:
-        temporal = "HOW TO PLAY";
+    case 1:
+      temporal = "HOW TO PLAY";
       break;
-      case 2:
-        temporal = "SETTINGS";
+    case 2:
+      temporal = "SETTINGS";
       break;
-      default:
-        temporal = "CREDITS";
+    default:
+      temporal = "CREDITS";
     }
     botonesMenu[i] = new Boton(width / 2, 480 + i * distancia, 400, 50, temporal);
   }
-
-  crearEnemigos();
 }
 
 void cargarImagenes() {
@@ -124,28 +127,25 @@ void draw() {
   } else if (pantalla != 2) {
     fondoY = height / 2;
   }
+
   dibujarFondo(fondoY);
 
   // Contenido de cada pantalla
-
-  switch (pantalla) {
-  case 1:
-    aparienciaMenu();
-    break;
-  case 2:
-    dibujarJuego();
-    break;
-  case 3:
+  if (pantalla == 1) {
+    apariencia_menu();
+  } else if (pantalla == 1.5) {
+    dibujarHistoria();
+  } else if (pantalla == 2) {
+    DibujarJuego();
+  } else if (pantalla == 3) {
     GestorPantallas.DibujarHowToPlay();
-    break;
-  case 4:
+  } else if (pantalla == 4) {
     GestorPantallas.dibujarConfiguracion();
-    break;
-  default:
+  } else {
     GestorPantallas.dibujarCreditos();
   }
 
-  switch (dificultad){
+  switch (dificultad) {
   }
 }
 
@@ -154,40 +154,40 @@ void mousePressed() {
   // ---------- MENU PRINCIPAL ----------
 
   switch (pantalla) {
-    case 1:
-      for (int i = 0; i < botonesMenu.length; i++) {
-        if (botonesMenu[i].sobreBoton) {
+  case 1:
+    for (int i = 0; i < botonesMenu.length; i++) {
+      if (botonesMenu[i].sobreBoton) {
 
-          // Reiniciar la partida al pulsar START GAME
+        // Reiniciar la partida al pulsar START GAME
 
-          if (i == 0) {
-            juegoGanado = false;
-            victoriaSonada = false;
+        if (i == 0) {
+          juegoGanado = false;
+          victoriaSonada = false;
 
-            jugador.x = width/2;
-            jugador.y = height - 100;
+          jugador.x = width/2;
+          jugador.y = height - 100;
 
-            for (int j = 0; j < maxDisparos; j++) {
-              balaActiva[j] = false;
-            }
-
-            direccionEnemigo[0] = 1;
-            direccionEnemigo[1] = -1;
-            direccionEnemigo[2] = 1;
-            crearEnemigos();
+          for (int j = 0; j < maxDisparos; j++) {
+            balaActiva[j] = false;
           }
 
-          pantalla = i + 2;
+          direccionEnemigo[0] = 1;
+          direccionEnemigo[1] = -1;
+          direccionEnemigo[2] = 1;
+          crearEnemigos();
         }
-      }
-    break;
-    case 2:
 
-      // ---------- VICTORIA ----------
+        pantalla = i + 2;
+      }
+    }
+    break;
+  case 2:
+
+    // ---------- VICTORIA ----------
 
     if (juegoGanado) {
       if (mouseX >= width/2 - 80 && mouseX <= width/2 + 80 &&
-          mouseY >= height - 125 && mouseY <= height - 75) {
+        mouseY >= height - 125 && mouseY <= height - 75) {
         pantalla = 1;
       }
     } else {
@@ -198,7 +198,7 @@ void mousePressed() {
       // Clic en el botón || PAUSE
 
       if (mouseX >= bx - 45 && mouseX <= bx + 45 &&
-          mouseY >= by - 20 && mouseY <= by + 20) {
+        mouseY >= by - 20 && mouseY <= by + 20) {
         juegoPausado = !juegoPausado;
       } else if (juegoPausado) {
 
@@ -208,52 +208,52 @@ void mousePressed() {
         // CONTINUE
 
         if (mouseX >= width/2 - 100 && mouseX <= width/2 + 100 &&
-            mouseY >= btnY1 - 22 && mouseY <= btnY1 + 22) {
+          mouseY >= btnY1 - 22 && mouseY <= btnY1 + 22) {
           juegoPausado = false;
         }
 
         // HOME
 
         if (mouseX >= width/2 - 100 && mouseX <= width/2 + 100 &&
-            mouseY >= btnY2 - 22 && mouseY <= btnY2 + 22) {
+          mouseY >= btnY2 - 22 && mouseY <= btnY2 + 22) {
           juegoPausado = false;
           pantalla = 1;
         }
       }
     }
     break;
-    default:
-      if (pantalla == 4) {
-        float startX = width/2 - 260;
+  default:
+    if (pantalla == 4) {
+      float startX = width/2 - 260;
 
-        // Clics Dificultad
+      // Clics Dificultad
 
-        if (mouseY >= height/2 - 80 - 19 && mouseY <= height/2 - 80 + 19) {
-          if (mouseX >= startX + 180 - 50 && mouseX <= startX + 180 + 50) dificultad = 1;
-          if (mouseX >= startX + 295 - 55 && mouseX <= startX + 295 + 55) dificultad = 2;
-          if (mouseX >= startX + 420 - 55 && mouseX <= startX + 420 + 55) dificultad = 3;
-        }
-
-        // Clics Velocidad
-
-        if (mouseY >= height/2 - 19 && mouseY <= height/2 + 19) {
-          if (mouseX >= startX + 180 - 50 && mouseX <= startX + 180 + 50) {
-            velocidadNave = 3;
-          }
-          if (mouseX >= startX + 295 - 55 && mouseX <= startX + 295 + 55) {
-            velocidadNave = 6;
-          }
-          if (mouseX >= startX + 420 - 55 && mouseX <= startX + 420 + 55) {
-            velocidadNave = 9;
-          }
-        }
+      if (mouseY >= height/2 - 80 - 19 && mouseY <= height/2 - 80 + 19) {
+        if (mouseX >= startX + 180 - 50 && mouseX <= startX + 180 + 50) dificultad = 1;
+        if (mouseX >= startX + 295 - 55 && mouseX <= startX + 295 + 55) dificultad = 2;
+        if (mouseX >= startX + 420 - 55 && mouseX <= startX + 420 + 55) dificultad = 3;
       }
 
-      // Botón BACK
+      // Clics Velocidad
 
-      if (mouseX >= width/2 - 80 && mouseX <= width/2 + 80 &&
-          mouseY >= height - 125 && mouseY <= height - 75) {
-        pantalla = 1;
+      if (mouseY >= height/2 - 19 && mouseY <= height/2 + 19) {
+        if (mouseX >= startX + 180 - 50 && mouseX <= startX + 180 + 50) {
+          velocidadNave = 3;
+        }
+        if (mouseX >= startX + 295 - 55 && mouseX <= startX + 295 + 55) {
+          velocidadNave = 6;
+        }
+        if (mouseX >= startX + 420 - 55 && mouseX <= startX + 420 + 55) {
+          velocidadNave = 9;
+        }
       }
+    }
+
+    // Botón BACK
+
+    if (mouseX >= width/2 - 80 && mouseX <= width/2 + 80 &&
+      mouseY >= height - 125 && mouseY <= height - 75) {
+      pantalla = 1;
+    }
   }
 }
