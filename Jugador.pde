@@ -1,89 +1,95 @@
-boolean Arriba;
-boolean Izquierda;
-boolean Abajo;
-boolean Derecha;
-boolean Espacio = false;
-boolean EspacioBloqueado = false;
+boolean arriba;
+boolean izquierda;
+boolean abajo;
+boolean derecha;
+boolean espacio = false;
 
-float v = 3;
-
-int maxDisparos = 12;
+int maxDisparos = 4;
 float[] disparosX = new float[maxDisparos];
 float[] disparosY = new float[maxDisparos];
-float velDisp = 20;
-boolean[] balaAct = new boolean[maxDisparos];
-
-int ultimapos = 0;
-int Cooldown = -5000;
+float velocidadDisparos = 20;
+boolean[] balaActiva = new boolean[maxDisparos];
+int ultimoDisparo = 0;
+int inicioCooldown = 0;
+int duracionCooldown = 0;
 
 void keyPressed() {
+
   // Tecla para pausar el juego
+
   if (keyCode == ENTER && pantalla == 2)
-    JuegoPausado = !JuegoPausado;
-  
+    juegoPausado = !juegoPausado;
+
   if (key == 'w' || key == 'W' || keyCode == UP)
-    Arriba = true;
+    arriba = true;
   if (key == 'a' || key == 'A' || keyCode == LEFT)
-    Izquierda = true;
+    izquierda = true;
   if (key == 's' || key == 'S' || keyCode == DOWN)
-    Abajo = true;
+    abajo = true;
   if (key == 'd' || key == 'D' || keyCode == RIGHT)
-    Derecha = true;
-  
-  if (key == ' ' && !EspacioBloqueado && millis() - Cooldown >= 5000)
-    Espacio = true;
+    derecha = true;
+
+  if (key == ' ')
+    espacio = true;
 }
 
-void Disparar() {
+void disparar() {
   boolean puedeDisparar = true;
   int i = 0;
 
   while (i < maxDisparos && puedeDisparar) {
-    if (balaAct[i] && disparosY[i] > Jugador.y - 400) {
+    if (balaActiva[i] && disparosY[i] > jugador.y - 300) {
       puedeDisparar = false;
     }
     i++;
   }
 
-  if (puedeDisparar && !balaAct[ultimapos]) {
-    balaAct[ultimapos] = true;
-    disparosX[ultimapos] = Jugador.x;
-    disparosY[ultimapos] = Jugador.y + 10;
+  if (puedeDisparar && !balaActiva[ultimoDisparo]) {
+    sfxLaserShoot.play();
+    
+    balaActiva[ultimoDisparo] = true;
+    disparosX[ultimoDisparo] = jugador.x;
+    disparosY[ultimoDisparo] = jugador.y;
+    ultimoDisparo++;
 
-    ultimapos++;
-
-    if (ultimapos == maxDisparos) {
-      Cooldown = millis();
-      EspacioBloqueado = true;
-      ultimapos = 0;
+    if (ultimoDisparo == maxDisparos) {
+      inicioCooldown = millis();
+      duracionCooldown = 2000;
+      ultimoDisparo = 0;
+    } else if (ultimoDisparo % 2 == 0) {
+      inicioCooldown = millis();
+      duracionCooldown = 1000;
     }
   }
 }
 
-void DibujarDisparos() {
+void dibujarDisparos() {
   for (int i = 0; i < maxDisparos; i++) {
-    if (balaAct[i]) {
+    if (balaActiva[i]) {
       fill(#4080d2);
       rect(disparosX[i], disparosY[i], 5, 20);
-      disparosY[i] -= velDisp;
+      disparosY[i] -= velocidadDisparos;
     }
 
     if (disparosY[i] < 0) {
-      balaAct[i] = false;
+      balaActiva[i] = false;
     }
   }
 }
 
-void impacto() {
+void derribarEnemigo() {
   int i = 0, j = 0, sw = 0;
+
   while (i < maxDisparos && sw == 0) {
-    if (balaAct[i]) {
+    if (balaActiva[i]) {
       j = 0;
-      while (j < MaxEnemigos && sw == 0) {
-        if (Existe[j]) {
-          if (abs(disparosX[i] - enemigo[j].x) <= 50 && abs(disparosY[i] - enemigo[j].y) <= 50){
-            Existe[j] = false;
-            balaAct[i] = false;
+      while (j < maxEnemigos && sw == 0) {
+        if (existe[j]) {
+          if (abs(disparosX[i] - enemigo[j].x) <= 48 && abs(disparosY[i] - enemigo[j].y) <= 48){
+            sfxExplosion.play();
+            
+            existe[j] = false;
+            balaActiva[i] = false;
             sw = 1;
           }
         }
@@ -96,35 +102,36 @@ void impacto() {
 
 void keyReleased()  {
   if (key == 'w' || key == 'W' || keyCode == UP)
-    Arriba = false;
+    arriba = false;
   if (key == 'a' || key == 'A' || keyCode == LEFT)
-    Izquierda = false;
+    izquierda = false;
   if (key == 's' || key == 'S' || keyCode == DOWN)
-    Abajo = false;
+    abajo = false;
   if (key == 'd' || key == 'D' || keyCode == RIGHT)
-    Derecha = false;
-  
+    derecha = false;
+
   if(key == ' ')
-    Espacio = false;
+    espacio = false;
 }
 
-void MoverNave() {
-  if (Arriba)
-    Jugador.y -= v;
-  if (Izquierda)
-    Jugador.x -= v;
-  if (Abajo)
-    Jugador.y += v;
-  if (Derecha)
-    Jugador.x += v;
+void moverJugador() {
+  if (arriba)
+    jugador.y -= velocidadNave;
+  if (izquierda)
+    jugador.x -= velocidadNave;
+  if (abajo)
+    jugador.y += velocidadNave;
+  if (derecha)
+    jugador.x += velocidadNave;
 
   // límites de pantalla
-  if (Jugador.y <= 64)
-    Jugador.y += v;
-  if (Jugador.x <= 64)
-    Jugador.x += v;
-  if (Jugador.y >= height - 64)
-    Jugador.y -= v;
-  if (Jugador.x >= width - 64)
-    Jugador.x -= v;
+
+  if (jugador.y <= 64)
+    jugador.y += velocidadNave;
+  if (jugador.x <= 64)
+    jugador.x += velocidadNave;
+  if (jugador.y >= height - 64)
+    jugador.y -= velocidadNave;
+  if (jugador.x >= width - 64)
+    jugador.x -= velocidadNave;
 }
