@@ -1,122 +1,151 @@
-PImage ImagenNave;
+PImage imagenNave;
 
-int Cantidad_vidas = 3;
-int DireccionEnemigos = 1;
-float VelocidadEnemigos = 2;
-float Ex, Ey;
+int cantidadVidas = 3;
+int direccionEnemigo[] = {1, -1, 1};
+float velocidadEnemigo;
 
-boolean Existe[] = new boolean[MaxEnemigos];
-
-Naves enemigo[] = new Naves[MaxEnemigos];
-Naves Vidas[] = new Naves[Cantidad_vidas];
+boolean existe[] = new boolean[maxEnemigos];
+Naves enemigo[] = new Naves[maxEnemigos];
+Naves vidas[] = new Naves[cantidadVidas];
 
 // Clase para crear las naves como objetos
+
 class Naves {
   int FrameActual = 0;
   PImage[] Frames = new PImage[8];
+  int tipo;  //Para definir si es enemiga o no y utilizarla en las colisiones (0: jugador 1: enemigo 2: aliado 3: distraccion)
   float x, y;
-  int Tipo; //Para definir si es enemiga o no y utilizarla en las colisiones (0: jugador 1: enemigo 2: aliado 3: distraccion)
 
-  Naves(PImage Imagen, float nx, float ny, int TipoNave) {
+  Naves(PImage Imagen, int nTipo, float nx, float ny) {
     for (int i = 0; i < Frames.length; i++) {
       Frames[i] = Imagen.get(i * 64, 0, 64, 64);  // recorta cada cuadro de 64x64
     }
-    
+    tipo = nTipo;
     x = nx;
     y = ny;
-    Tipo = TipoNave;
   }
 
-  void DibujarNaves() { //Dibuja una nave animada en 8 frames
-    if (!JuegoPausado && frameCount % 8 == 0) {
+  void dibujarNave() {  //Dibuja una nave animada en 8 frames
+    if (!juegoPausado && frameCount % 8 == 0) {
       FrameActual = (FrameActual + 1) % Frames.length;
     }
     
-    image(Frames[FrameActual], x, y, 64  *  2, 64  *  2);
+    image(Frames[FrameActual], x, y, 64 * 2, 64 * 2);
   }
 }
 
 void crearEnemigos() { // Función para crear la lista que contien a los enemigos
-  float EspacioEntreNaves = 110;
-  float Margen = 200;
-  int  i = 0;
+  int  k = 0;
+  int colorNave;
+  float enemigoX, enemigoY;
   
-  for (int Bloque = 0; Bloque < 2; Bloque++) { // Vamos a dibujar dos bloques de enemigos
-  float Inicio_x;
-    if (Bloque == 0) {
-      Inicio_x = Margen;
-    } else {
-      Inicio_x = width - Margen - 4 * EspacioEntreNaves;
-    }
-    // Cada bloque es una matriz
-    for (int Fila = 0; Fila < 2; Fila++) {
-      for (int Columna = 0; Columna < 5; Columna++) {
-        int ColorNave = int(random(1, 4)); // Para que las naves aparezcan de manera aleatoria en la pantalla
-        switch(ColorNave) {
+  for (int i = 0; i < 3; i++) {
+    for (int j = 0; j < 9; j++) {
+      colorNave = int(random(1, 4));  // Para que las naves aparezcan de manera aleatoria en la pantalla
+      switch(colorNave) {
         case 1:
-          ImagenNave = NaveRoja;
-          break;
+          imagenNave = naveRoja;
+        break;
         case 2:
-          ImagenNave = NaveVerde;
-          break;
-        case 3:
-          ImagenNave = NaveGris;
-          break;
+          imagenNave = naveVerde;
+        break;
+        default:
+          imagenNave = naveGris;
+      }
+
+      enemigoX  = width / 2 - 4 * 128 + j * 128;
+      enemigoY = 64 + i * 128;
+
+      enemigo[k] = new Naves(imagenNave, colorNave, enemigoX, enemigoY);
+      existe[k] = true;
+      k++;  // Para pasar a la siguiente nave
+    }
+  }
+}
+
+void moverEnemigos() {
+  switch(dificultad) {
+    case 1:
+      velocidadEnemigo = 6;
+    break;
+    case 2:
+      velocidadEnemigo = 9;
+    break;
+    default:
+      velocidadEnemigo = 12;
+  }
+  if (!juegoPausado) {
+    float minX = 64;
+    float maxX = width - 64;
+    int fila;
+
+    for (int i = 0; i < maxEnemigos; i++) {
+      fila = i / 9;
+      if (existe[i]) {
+        if (direccionEnemigo[fila] == -1 && enemigo[i].x <= minX) {
+          direccionEnemigo[fila] = 1;
+        } else if (direccionEnemigo[fila] == 1 && enemigo[i].x >= maxX) {
+          direccionEnemigo[fila] = -1;
         }
-
-        float Enemigo_x  = Inicio_x + Columna * EspacioEntreNaves;
-        float Enemigo_y = 200 + Fila * EspacioEntreNaves;
-
-        enemigo[i] = new Naves(ImagenNave, Enemigo_x, Enemigo_y, ColorNave);
-        Existe[i] = true;
-        i++; // Para pasar a la siguiente nave
       }
+    }
+
+    for (int i = 0; i < maxEnemigos; i++) {
+      fila = i / 9;
+      if (existe[i])
+        enemigo[i].x += velocidadEnemigo * direccionEnemigo[fila];
     }
   }
 }
 
-void MoverEnemigos() {
-  if (!JuegoPausado) {
-    float min_x = 64;
-    float Max_x = width - 64;
-
-    for (int i = 0; i < MaxEnemigos; i++) {
-      if (enemigo[i].x == min_x) {
-        DireccionEnemigos = 1;
-      } else if ( enemigo[i].x == Max_x) {
-        DireccionEnemigos = -1;
-      }
-    }
-
-    for (int i = 0; i < MaxEnemigos; i++) {
-      enemigo[i].x += VelocidadEnemigos * DireccionEnemigos;
+int nahIdWin(int i, int t){
+  int gojoWon = 1;
+  if (i < t) {
+    if (existe[i]) {
+      gojoWon = 0;
+    } else {
+      gojoWon = nahIdWin(i + 1, t);
     }
   }
+  return gojoWon;
 }
 
-void DibujarJuego() {
-  Jugador.DibujarNaves();
-  MoverNave();
-  
-  for (int i = 0; i < MaxEnemigos; i++) {
-    if (Existe[i]) {
-      enemigo[i].DibujarNaves();
+void dibujarJuego() {
+  if (!juegoGanado) {
+    jugador.dibujarNave();
+
+    for (int i = 0; i < maxEnemigos; i++) {
+      if (existe[i]) {
+        enemigo[i].dibujarNave();
+      }
     }
-  }
-  
-  MoverEnemigos();
-  
-  if (millis() - Cooldown >= 5000) {
-    EspacioBloqueado = false;
-  }
-  if (!JuegoPausado && Espacio && !EspacioBloqueado) {
-    Disparar();
-  }
-  DibujarDisparos();
-  impacto();
     
-  GestorPantallas.DibujarBotonPausaHUD();
-  if (JuegoPausado) {
-    GestorPantallas.dibujarVentanaPausa();
+    if(!juegoPausado) {
+      moverJugador();
+      moverEnemigos();
+
+      if (espacio && millis() - inicioCooldown >= duracionCooldown) {
+        disparar();
+      }
+
+      dibujarDisparos();
+      derribarEnemigo();
+
+      if (nahIdWin(0, maxEnemigos) == 1 && !victoriaSonada) {
+        juegoGanado = true;
+        sfxVictory.play();
+        victoriaSonada = true;
+      }
+    }
+  }
+
+  if (juegoGanado) {
+    GestorPantallas.dibujarVictoria();
+  } else {
+    GestorPantallas.dibujarBotonPausaHUD();
+
+    if (juegoPausado) {
+      GestorPantallas.dibujarVentanaPausa();
+    }
   }
 }
