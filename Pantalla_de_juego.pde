@@ -13,7 +13,7 @@ Naves vidas[] = new Naves[cantidadVidas];
 class Naves {
   int FrameActual = 0;
   PImage[] Frames = new PImage[8];
-  int tipo;  //Para definir si es enemiga o no y utilizarla en las colisiones (0: jugador 1: enemigo 2: aliado 3: distraccion)
+  int tipo;  //Para definir si es enemiga o no y utilizarla en las colisiones (0: Jugador 1: enemigo 2: aliado 3: distraccion)
   float x, y;
 
   Naves(PImage Imagen, int nTipo, float nx, float ny) {
@@ -26,7 +26,7 @@ class Naves {
   }
 
   void dibujarNave() {  //Dibuja una nave animada en 8 frames
-    if (!juegoPausado && frameCount % 8 == 0) {
+    if (!JuegoPausado && frameCount % 8 == 0) {
       FrameActual = (FrameActual + 1) % Frames.length;
     }
     
@@ -75,7 +75,7 @@ void moverEnemigos() {
     default:
       velocidadEnemigo = 12;
   }
-  if (!juegoPausado) {
+  if (!JuegoPausado) {
     float minX = 64;
     float maxX = width - 64;
     int fila;
@@ -129,7 +129,7 @@ void dibujarVidas() {
 
 void dibujarJuego() {
   if (!juegoGanado) {
-    jugador.dibujarNave();
+    Jugador.dibujarNave();
 
     for (int i = 0; i < maxEnemigos; i++) {
       if (existe[i]) {
@@ -137,7 +137,7 @@ void dibujarJuego() {
       }
     }
     
-    if(!juegoPausado) {
+    if(!JuegoPausado) {
       moverJugador();
       moverEnemigos();
 
@@ -161,7 +161,7 @@ void dibujarJuego() {
   } else {
     GestorPantallas.dibujarBotonPausaHUD();
 
-    if (juegoPausado) {
+    if (JuegoPausado) {
       GestorPantallas.dibujarVentanaPausa();
     }
   }

@@ -18,7 +18,7 @@ void keyPressed() {
   // Tecla para pausar el juego
 
   if (keyCode == ENTER && pantalla == 2)
-    juegoPausado = !juegoPausado;
+    JuegoPausado = !JuegoPausado;
 
   if (key == 'w' || key == 'W' || keyCode == UP)
     arriba = true;
@@ -38,7 +38,7 @@ void disparar() {
   int i = 0;
 
   while (i < maxDisparos && puedeDisparar) {
-    if (balaActiva[i] && disparosY[i] > jugador.y - 300) {
+    if (balaActiva[i] && disparosY[i] > Jugador.y - 300) {
       puedeDisparar = false;
     }
     i++;
@@ -48,8 +48,8 @@ void disparar() {
     sfxLaserShoot.play();
     
     balaActiva[ultimoDisparo] = true;
-    disparosX[ultimoDisparo] = jugador.x;
-    disparosY[ultimoDisparo] = jugador.y;
+    disparosX[ultimoDisparo] = Jugador.x;
+    disparosY[ultimoDisparo] = Jugador.y;
     ultimoDisparo++;
 
     if (ultimoDisparo == maxDisparos) {
@@ -116,22 +116,22 @@ void keyReleased()  {
 
 void moverJugador() {
   if (arriba)
-    jugador.y -= velocidadNave;
+    Jugador.y -= velocidadNave;
   if (izquierda)
-    jugador.x -= velocidadNave;
+    Jugador.x -= velocidadNave;
   if (abajo)
-    jugador.y += velocidadNave;
+    Jugador.y += velocidadNave;
   if (derecha)
-    jugador.x += velocidadNave;
+    Jugador.x += velocidadNave;
 
   // límites de pantalla
 
-  if (jugador.y <= 64)
-    jugador.y += velocidadNave;
-  if (jugador.x <= 64)
-    jugador.x += velocidadNave;
-  if (jugador.y >= height - 64)
-    jugador.y -= velocidadNave;
-  if (jugador.x >= width - 64)
-    jugador.x -= velocidadNave;
+  if (Jugador.y <= 64)
+    Jugador.y += velocidadNave;
+  if (Jugador.x <= 64)
+    Jugador.x += velocidadNave;
+  if (Jugador.y >= height - 64)
+    Jugador.y -= velocidadNave;
+  if (Jugador.x >= width - 64)
+    Jugador.x -= velocidadNave;
 }

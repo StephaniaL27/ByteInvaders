@@ -13,15 +13,18 @@ String[] historia = {
   "Tu misión no consiste simplemente en destruir señales enemigas.",
   "Debes aprender a distinguir entre mensajes dañinos, comunicaciones positivas y señales neutrales;",
   "intervenir cuando sea necesario y proteger el bienestar de la comunidad digital.",
-  "Porque en esta guerra, no todas las señales merecen una respuesta, y no intervenir también puede tener consecuencias."
+  "Porque en esta guerra, no todas las señales merecen una respuesta, y no intervenir",
+  "también puede tener consecuencias."
 };
 
 float interlineado = 50;
 float scroll = 0;
 float velScroll = 1.5;
 float salida = 100;
-float horizonte = 300;   // por encima de esta altura, el texto se pierde
 float tamañoT = 30;
+float tramo = 0.8;        // más alto = el encogimiento empieza antes
+float escalaMin = 0.3;    // tamaño mínimo arriba (1 = sin encoger)
+float desvanece = 0.25;   // más alto = se desvanece desde más abajo
 
 PFont fuenteHistoria;
 
@@ -30,44 +33,47 @@ PGraphics capaTexto;
 void dibujarHistoria() {
   capaTexto.beginDraw();
   capaTexto.clear();
-  capaTexto.textAlign(CENTER, CENTER);
   capaTexto.textFont(fuenteHistoria);
+  capaTexto.textSize(tamañoT);
+  capaTexto.textAlign(CENTER, CENTER);
+
   for (int i = 0; i < historia.length; i++) {
     float y = height + i * interlineado - scroll;
-    float u = (y - salida) / (height - salida);   // 0 arriba, 1 abajo
-    u = max(u, 0);                                // evita NaN con pow()
+    float u = max((y - salida) / (height - salida), 0);   // 0 arriba, 1 abajo
     float yPantalla = salida + (height - salida) * pow(u, 1.5);
 
-    float valorT = map(yPantalla, salida, horizonte, 0.2, 1); // calcular la escala para el tamaño (0.2 arriba, 1 abajo) a partir de y
-    float escalaT = constrain(valorT, 0.2, 1); // para que no se salga de la escala que establecimos
-    float valorC = map(yPantalla, salida, horizonte, 0, 255); // calcular la escala para que cambie la opacidad conforme va subiendo el texto
-    float escalaC = constrain(valorC, 0, 255); // para que no se salga de la escala que establecimos
-    float opacidad = constrain(map(u, 0, 0.3, 0, 255), 0, 255);
+    float s = constrain(u / tramo, 0, 1);
+    s = s * s * (3 - 2 * s);                 // suaviza el inicio y el final del cambio
+    float escala = lerp(escalaMin, 1, s);
+    float opacidad = constrain(map(u, 0, desvanece, 0, 255), 0, 255);
 
-    capaTexto.textSize(tamañoT*escalaT);
-    capaTexto.fill(#FFED00, escalaC);
+    capaTexto.pushMatrix();
+    capaTexto.translate(width/2, yPantalla);
+    capaTexto.scale(escala);
     if (i == 0) {
-      texto(capaTexto, historia[i], width/2, yPantalla, 8 * escalaT, opacidad);
+      texto(capaTexto, historia[i], 0, 0, 8, opacidad);
     } else {
-      capaTexto.text(historia[i], width/2, yPantalla);
+      capaTexto.fill(#FFED00, opacidad);
+      capaTexto.text(historia[i], 0, 0);
     }
-    capaTexto.endDraw();
-    scroll += velScroll;
-    image(capaTexto, width/2, height/2);
+    capaTexto.popMatrix();
+  }
+  capaTexto.endDraw();
+  image(capaTexto, width/2, height/2);
 
-    float ultY = height + (historia.length -1) * interlineado - scroll;
-    if (ultY < salida) {
-      pantalla = 2;
-    }
+  scroll += velScroll;
+  float ultY = height + (historia.length - 1) * interlineado - scroll;
+  if (ultY < salida) {
+    pantalla = 2;
   }
 }
 
-  void texto(PGraphics g, String s, float x, float y, float prof, float opacidad) {
-    for (int k = int(prof); k >= 1; k--) {
-      color c = lerpColor(#FFED00, #B84400, k / prof);   // más oscuro cuanto más lejos
-      g.fill(c, opacidad);
-      g.text(s, x - k, y + k);
-    }
-    g.fill(#FFED00, opacidad);
-    g.text(s, x, y);
+void texto(PGraphics g, String s, float x, float y, float prof, float opacidad) {
+  for (int k = int(prof); k >= 1; k--) {
+    color c = lerpColor(#FFED00, #B84400, k / prof);   // más oscuro cuanto más lejos
+    g.fill(c, opacidad);
+    g.text(s, x - k, y + k);
   }
+  g.fill(#FFED00, opacidad);
+  g.text(s, x, y);
+}
