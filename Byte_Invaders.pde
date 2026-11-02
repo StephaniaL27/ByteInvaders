@@ -11,7 +11,7 @@ int Velocidad_titileo = 7;           // Cada cuántos frames cambia el titileo
 
 // ---------- Interfaz ----------
 Pantallas GestorPantallas;  // Gestor que dibuja las pantallas secundarias
-int pantalla = 1;            // 1: Menú, 2: Juego, 3: How to play, 4: Settings, 5: Credits
+float pantalla = 1;            // 1: Menú, 1.5: Historia, 2: Juego, 3: How to play, 4: Settings, 5: Credits
 
 // ---------- Ajustes y pausa ----------
 int dificultad = 2;              // 1: Fácil, 2: Normal, 3: Difícil
@@ -27,9 +27,9 @@ PImage NaveGris;
 int MaxEnemigos = 20;
 Naves Jugador;
 
-// ---------- Vidas ----------
+// ---------- Vidas y puntuación ----------
 PImage corazones;
-
+int Puntos = 0;
 
 void setup() {
   fullScreen();
@@ -37,15 +37,17 @@ void setup() {
   rectMode(CENTER);
   noSmooth();  // Evita que el pixel art se vea borroso
   frameRate(60);
-  
-  fuenteBoton = createFont("font_botones_r.ttf", 42);
-  textFont(fuenteBoton);
-  
-  GestorPantallas = new Pantallas();
-  cargarImagenes();
 
-  // La nave del jugador inicia bajo la pantalla y sube hasta su posición
-  Jugador = new Naves(Nave_jugador, width / 2, height + 64, 0);
+  fuenteBoton = createFont("font_botones_r.ttf", 42);
+  fuenteHistoria = createFont("font_historia.ttf", 40);
+  cargarImagenes();
+  capaTexto = createGraphics(width, height);
+
+  textFont(fuenteBoton);
+
+  GestorPantallas = new Pantallas();
+  Jugador = new Naves(Nave_jugador, width / 2, height + 64, 0);   // La nave del jugador inicia bajo la pantalla y sube hasta su posición
+  crearEnemigos();
 
   // Botones del menú, uno debajo del otro
   float distancia = 80;
@@ -54,8 +56,6 @@ void setup() {
     boton_x[i] = width / 2;
     boton_y[i] = 480 + i * distancia;
   }
-  
-  crearEnemigos();
 }
 
 
@@ -84,28 +84,25 @@ void draw() {
     Fondo_y = height / 2;
   }
   dibujarFondo(Fondo_y);
-  
+
   // Contenido de cada pantalla
-  switch (pantalla) {
-    case 1:
-      apariencia_menu();
-    break;
-    case 2:
-      DibujarJuego();
-    break;
-    case 3:
-      GestorPantallas.DibujarHowToPlay();
-    break;
-    case 4:
-      GestorPantallas.dibujarConfiguracion();
-    break;
-    default:
-      GestorPantallas.dibujarCreditos();
+  if (pantalla == 1) {
+    apariencia_menu();
+  } else if (pantalla == 1.5) {
+    dibujarHistoria();
+  } else if (pantalla == 2) {
+    DibujarJuego();
+  } else if (pantalla == 3) {
+    GestorPantallas.DibujarHowToPlay();
+  } else if (pantalla == 4) {
+    GestorPantallas.dibujarConfiguracion();
+  } else {
+    GestorPantallas.dibujarCreditos();
   }
 }
 
 /* Dibuja el fondo y las estrellas dos veces (una encima de otra)
-   para que el desplazamiento vertical no deje huecos */
+ para que el desplazamiento vertical no deje huecos */
 void dibujarFondo(float desplazamiento) {
   imageMode(CORNER);
 

@@ -53,7 +53,7 @@ void mousePressed() {
       if (overButton) {
         switch(i) {
         case 0:
-          pantalla = 2;
+          pantalla = 1.5;
           break;
         case 1:
           pantalla = 3;

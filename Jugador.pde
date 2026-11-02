@@ -7,7 +7,7 @@ boolean EspacioBloqueado = false;
 
 float v = 3;
 
-int maxDisparos = 12;
+int maxDisparos = 15;
 float[] disparosX = new float[maxDisparos];
 float[] disparosY = new float[maxDisparos];
 float velDisp = 20;

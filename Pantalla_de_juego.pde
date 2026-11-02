@@ -21,7 +21,7 @@ class Naves {
     for (int i = 0; i < Frames.length; i++) {
       Frames[i] = Imagen.get(i * 64, 0, 64, 64);  // recorta cada cuadro de 64x64
     }
-    
+
     x = nx;
     y = ny;
     Tipo = TipoNave;
@@ -31,7 +31,7 @@ class Naves {
     if (!JuegoPausado && frameCount % 8 == 0) {
       FrameActual = (FrameActual + 1) % Frames.length;
     }
-    
+
     image(Frames[FrameActual], x, y, 64  *  2, 64  *  2);
   }
 }
@@ -40,9 +40,9 @@ void crearEnemigos() { // Función para crear la lista que contien a los enemigo
   float EspacioEntreNaves = 110;
   float Margen = 200;
   int  i = 0;
-  
+
   for (int Bloque = 0; Bloque < 2; Bloque++) { // Vamos a dibujar dos bloques de enemigos
-  float Inicio_x;
+    float Inicio_x;
     if (Bloque == 0) {
       Inicio_x = Margen;
     } else {
@@ -93,19 +93,35 @@ void MoverEnemigos() {
     }
   }
 }
+int FrameActualC = 0;
+float Xinicial = 100;
+float Y = 70;
+float distanciaC = 50;
+PImage FramesC[] = new PImage[8];
+void dibujarVidas() {
+  for (int j = 0; j < FramesC.length; j++) {
+    FramesC[j] = corazones.get(j * 32, 0, 32, 32);  // recorta cada cuadro de 32x32
+  }
+  for (int i = 0; i < 3; i++) {
+    if (!JuegoPausado && frameCount % 8 == 0) {
+      FrameActualC = (FrameActualC + 1) % FramesC.length;
+    }
+    image(FramesC[FrameActualC], Xinicial + distanciaC*i, Y, 32  *  2, 32  *  2);
+  }
+}
 
 void DibujarJuego() {
   Jugador.DibujarNaves();
   MoverNave();
-  
+
   for (int i = 0; i < MaxEnemigos; i++) {
     if (Existe[i]) {
       enemigo[i].DibujarNaves();
     }
   }
-  
+
   MoverEnemigos();
-  
+
   if (millis() - Cooldown >= 5000) {
     EspacioBloqueado = false;
   }
@@ -114,9 +130,14 @@ void DibujarJuego() {
   }
   DibujarDisparos();
   impacto();
-    
+
   GestorPantallas.DibujarBotonPausaHUD();
   if (JuegoPausado) {
     GestorPantallas.dibujarVentanaPausa();
   }
+
+  dibujarVidas();
+  fill(#ffffff);
+  textSize(40);
+  text(Puntos, width/2 - 500, 70);
 }
