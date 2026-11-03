@@ -47,7 +47,8 @@ int Puntos = 0;
 SoundFile sfxLaserShoot;
 SoundFile sfxExplosion;
 SoundFile sfxVictory;
-SoundFile musicaFondo;
+SoundFile musicaJuego;
+SoundFile musicaMenu;
 
 void setup() {
   fullScreen();
@@ -60,6 +61,8 @@ void setup() {
   fuenteHistoria = createFont("font_historia.ttf", 40);
   cargarImagenes();
   cargarSonidos();
+  musicaMenu.loop();
+  musicaMenu.amp(0.5);
 
   capaTexto = createGraphics(width, height);
   capaTexto.smooth(3);
@@ -110,7 +113,8 @@ void cargarSonidos() {
   sfxLaserShoot = new SoundFile(this, "laserShoot.wav");
   sfxExplosion = new SoundFile(this, "explosion.wav");
   sfxVictory = new SoundFile(this, "byte_invaders_victory.wav");
-  musicaFondo = new SoundFile(this, "byte_invaders_theme.wav");
+  musicaJuego = new SoundFile(this, "byte_invaders_theme.wav");
+  musicaMenu = new SoundFile(this, "byte_invaders_menu_chill.wav");
 }
 
 void draw() {
@@ -158,8 +162,9 @@ void mousePressed() {
         // Reiniciar la partida al pulsar START GAME
 
         if (i == 0) {
-          musicaFondo.loop();
-          musicaFondo.amp(0.3);
+          musicaMenu.stop();
+          musicaJuego.loop();
+          musicaJuego.amp(0.5);
           juegoGanado = false;
           victoriaSonada = false;
 
@@ -215,7 +220,9 @@ void mousePressed() {
         if (mouseX >= width/2 - 100 && mouseX <= width/2 + 100 &&
           mouseY >= btnY2 - 22 && mouseY <= btnY2 + 22) {
           juegoPausado = false;
-          musicaFondo.stop();
+          musicaJuego.stop();
+          musicaMenu.loop();
+          musicaMenu.amp(0.5);
           pantalla = 1;
         }
       }
