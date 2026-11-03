@@ -13,7 +13,7 @@ Naves vidas[] = new Naves[cantidadVidas];
 class Naves {
   int FrameActual = 0;
   PImage[] Frames = new PImage[8];
-  int tipo;  //Para definir si es enemiga o no y utilizarla en las colisiones (0: Jugador 1: enemigo 2: aliado 3: distraccion)
+  int tipo;  //Para definir si es enemiga o no y utilizarla en las colisiones (0: jugador 1: enemigo 2: aliado 3: distraccion)
   float x, y;
 
   Naves(PImage Imagen, int nTipo, float nx, float ny) {
@@ -26,12 +26,11 @@ class Naves {
   }
 
   void dibujarNave() {  //Dibuja una nave animada en 8 frames
-    if (!JuegoPausado && frameCount % 8 == 0) {
+    if (!juegoPausado && frameCount % 8 == 0) {
       FrameActual = (FrameActual + 1) % Frames.length;
     }
     
     image(Frames[FrameActual], x, y, 64 * 2, 64 * 2);
-
   }
 }
 
@@ -55,7 +54,7 @@ void crearEnemigos() { // Función para crear la lista que contien a los enemigo
       }
 
       enemigoX  = width / 2 - 4 * 128 + j * 128;
-      enemigoY = 200 + i * 128;
+      enemigoY = 64 + i * 128;
 
       enemigo[k] = new Naves(imagenNave, colorNave, enemigoX, enemigoY);
       existe[k] = true;
@@ -75,7 +74,7 @@ void moverEnemigos() {
     default:
       velocidadEnemigo = 12;
   }
-  if (!JuegoPausado) {
+  if (!juegoPausado) {
     float minX = 64;
     float maxX = width - 64;
     int fila;
@@ -122,16 +121,17 @@ void dibujarVidas() {
     FramesC[j] = corazones.get(j * 32, 0, 32, 32);  // recorta cada cuadro de 32x32
   }
   for (int i = 0; i < 3; i++) {
-    if (!JuegoPausado && frameCount % 8 == 0) {
+    if (!juegoPausado && frameCount % 8 == 0) {
       FrameActualC = (FrameActualC + 1) % FramesC.length;
     }
     image(FramesC[FrameActualC], Xinicial + distanciaC*i, Y, 32  *  2, 32  *  2);
   }
 }
 
+
 void dibujarJuego() {
   if (!juegoGanado) {
-    Jugador.dibujarNave();
+    jugador.dibujarNave();
 
     for (int i = 0; i < maxEnemigos; i++) {
       if (existe[i]) {
@@ -139,7 +139,7 @@ void dibujarJuego() {
       }
     }
     
-    if(!JuegoPausado) {
+    if(!juegoPausado) {
       moverJugador();
       moverEnemigos();
 
@@ -152,6 +152,7 @@ void dibujarJuego() {
 
       if (nahIdWin(0, maxEnemigos) == 1 && !victoriaSonada) {
         juegoGanado = true;
+        musicaFondo.stop();
         sfxVictory.play();
         victoriaSonada = true;
       }
@@ -163,7 +164,7 @@ void dibujarJuego() {
   } else {
     GestorPantallas.dibujarBotonPausaHUD();
 
-    if (JuegoPausado) {
+    if (juegoPausado) {
       GestorPantallas.dibujarVentanaPausa();
     }
   }
