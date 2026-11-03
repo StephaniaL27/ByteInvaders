@@ -1,9 +1,11 @@
 import processing.sound.*;
 
 // ---------- Imágenes del menú ----------
+
 PImage tituloMenu;
 
 // ---------- Fondo animado ----------
+
 PImage fondo;                        // Imagen de fondo (se repite en bucle vertical)
 PImage[] estrellas = new PImage[8];  // Frames de las estrellas que titilan
 float velocidadFondo = 5;           // Velocidad vertical del fondo (px por frame)
@@ -12,37 +14,40 @@ int Frame_estrellas = 0;             // Frame actual del titileo de las estrella
 int Velocidad_titileo = 7;           // Cada cuántos frames cambia el titileo
 
 // ---------- Interfaz ----------
+
 PFont fuenteBoton;
 Pantallas GestorPantallas;  // Gestor que dibuja las pantallas secundarias
-float pantalla = 1;            // 1: Menú, 1.5: Historia, 2: Juego, 3: How to play, 4: Settings, 5: Credits
+float pantalla = 1;           // 1: Menú, 1.5: Historia, 2: Juego, 3: How to play, 4: Settings, 5: Credits
 
 // ---------- Ajustes y pausa ----------
+
 int dificultad = 2;            // 1: Fácil, 2: Normal, 3: Difícil
 int velocidadNave = 6;        // 1: Lenta, 2: Normal, 3: Rápida
 String Modo_juego = "HISTORIA";
-boolean JuegoPausado = false;  // true si el juego está en pausa
+boolean juegoPausado = false;  // true si el juego está en pausa
 boolean juegoGanado = false;
 boolean victoriaSonada = false;
 
 // ---------- Naves ----------
-PImage Nave_Jugador;
+
+PImage Nave_jugador;
 PImage naveRoja;
 PImage naveVerde;
 PImage naveGris;
 int maxEnemigos = 27;
-Naves Jugador;
-
+Naves jugador;
 
 // ---------- Vidas ----------
+
 PImage corazones;
 int Puntos = 0;
 
 // ---------- Sonidos ----------
+
 SoundFile sfxLaserShoot;
 SoundFile sfxExplosion;
 SoundFile sfxVictory;
 SoundFile musicaFondo;
-
 
 void setup() {
   fullScreen();
@@ -62,10 +67,8 @@ void setup() {
   textFont(fuenteBoton);
 
   GestorPantallas = new Pantallas();
-  Jugador = new Naves(Nave_Jugador, width / 2, height + 64, 0);   // La nave del Jugador inicia bajo la pantalla y sube hasta su posición
+  jugador = new Naves(Nave_jugador, width / 2, height + 64, 0);  // La nave del jugador inicia bajo la pantalla y sube hasta su posición
   crearEnemigos();
-
-  musicaFondo.loop();
 
   // Botones del menú, uno debajo del otro
 
@@ -73,17 +76,17 @@ void setup() {
   String temporal;
   for (int i = 0; i < botonesMenu.length; i++) {
     switch(i) {
-    case 0:
-      temporal = "START GAME";
+      case 0:
+        temporal = "START GAME";
       break;
-    case 1:
-      temporal = "HOW TO PLAY";
+      case 1:
+        temporal = "HOW TO PLAY";
       break;
-    case 2:
-      temporal = "SETTINGS";
+      case 2:
+        temporal = "SETTINGS";
       break;
-    default:
-      temporal = "CREDITS";
+      default:
+        temporal = "CREDITS";
     }
     botonesMenu[i] = new Boton(width / 2, 480 + i * distancia, 400, 50, temporal);
   }
@@ -92,7 +95,7 @@ void setup() {
 void cargarImagenes() {
   tituloMenu = loadImage("titulo_byteinvaders.png");
   corazones = loadImage("corazones.png");
-  Nave_Jugador = loadImage("nave.png");
+  Nave_jugador = loadImage("nave.png");
   naveRoja = loadImage("nave_roja.png");
   naveVerde = loadImage("nave_verde.png");
   naveGris = loadImage("nave_npc.png");
@@ -106,15 +109,15 @@ void cargarImagenes() {
 void cargarSonidos() {
   sfxLaserShoot = new SoundFile(this, "laserShoot.wav");
   sfxExplosion = new SoundFile(this, "explosion.wav");
-  sfxVictory = new SoundFile(this, "victory.wav");
-  musicaFondo = new SoundFile(this, "musica_fondo.wav");
+  sfxVictory = new SoundFile(this, "byte_invaders_victory.wav");
+  musicaFondo = new SoundFile(this, "byte_invaders_theme.wav");
 }
 
 void draw() {
 
   // Fondo: se desplaza en el juego y queda quieto en las demás pantallas
 
-  if (pantalla == 2 && !JuegoPausado && !juegoGanado) {
+  if (pantalla == 2 && !juegoPausado && !juegoGanado) {
     fondoY += velocidadFondo;
     if (fondoY >= height) {
       fondoY -= height;  // vuelve al inicio del bucle
@@ -122,12 +125,12 @@ void draw() {
   } else if (pantalla != 2) {
     fondoY = height / 2;
   }
-
   dibujarFondo(fondoY);
 
   // Contenido de cada pantalla
+
   if (pantalla == 1) {
-    apariencia_menu();
+    aparienciaMenu();
   } else if (pantalla == 1.5) {
     dibujarHistoria();
   } else if (pantalla == 2) {
@@ -140,7 +143,7 @@ void draw() {
     GestorPantallas.dibujarCreditos();
   }
 
-  switch (dificultad) {
+  switch (dificultad){
   }
 }
 
@@ -155,11 +158,13 @@ void mousePressed() {
         // Reiniciar la partida al pulsar START GAME
 
         if (i == 0) {
+          musicaFondo.loop();
+          musicaFondo.amp(0.3);
           juegoGanado = false;
           victoriaSonada = false;
 
-          Jugador.x = width/2;
-          Jugador.y = height - 100;
+          jugador.x = width/2;
+          jugador.y = height - 100;
 
           for (int j = 0; j < maxDisparos; j++) {
             balaActiva[j] = false;
@@ -194,8 +199,8 @@ void mousePressed() {
       // Clic en el botón || PAUSE
       if (mouseX >= bx - 45 && mouseX <= bx + 45 &&
         mouseY >= by - 20 && mouseY <= by + 20) {
-        JuegoPausado = !JuegoPausado;
-      } else if (JuegoPausado) {
+        juegoPausado = !juegoPausado;
+      } else if (juegoPausado) {
 
         float btnY1 = height/2 + 5;
         float btnY2 = height/2 + 65;
@@ -203,13 +208,14 @@ void mousePressed() {
         // CONTINUE
         if (mouseX >= width/2 - 100 && mouseX <= width/2 + 100 &&
           mouseY >= btnY1 - 22 && mouseY <= btnY1 + 22) {
-          JuegoPausado = false;
+          juegoPausado = false;
         }
 
         // HOME
         if (mouseX >= width/2 - 100 && mouseX <= width/2 + 100 &&
           mouseY >= btnY2 - 22 && mouseY <= btnY2 + 22) {
-          JuegoPausado = false;
+          juegoPausado = false;
+          musicaFondo.stop();
           pantalla = 1;
         }
       }
@@ -237,12 +243,11 @@ void mousePressed() {
           velocidadNave = 9;
         }
       }
-
-      // Botón BACK
-      if (mouseX >= width/2 - 80 && mouseX <= width/2 + 80 &&
-        mouseY >= height - 125 && mouseY <= height - 75) {
-        pantalla = 1;
-      }
+    }
+    // Botón BACK
+    if (mouseX >= width/2 - 80 && mouseX <= width/2 + 80 &&
+      mouseY >= height - 125 && mouseY <= height - 75) {
+      pantalla = 1;
     }
   }
 }
