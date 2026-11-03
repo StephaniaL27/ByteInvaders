@@ -53,7 +53,7 @@ class Boton {
   }
 }
 
-void apariencia_menu() {
+void aparienciaMenu() {
   image(tituloMenu, width/2, height*0.25, 1100, 300);
 
   for (int i = 0; i < botonesMenu.length; i++) {

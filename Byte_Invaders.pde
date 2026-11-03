@@ -1,9 +1,11 @@
 import processing.sound.*;
 
 // ---------- Imágenes del menú ----------
+
 PImage tituloMenu;
 
 // ---------- Fondo animado ----------
+
 PImage fondo;                        // Imagen de fondo (se repite en bucle vertical)
 PImage[] estrellas = new PImage[8];  // Frames de las estrellas que titilan
 float velocidadFondo = 5;           // Velocidad vertical del fondo (px por frame)
@@ -12,20 +14,23 @@ int Frame_estrellas = 0;             // Frame actual del titileo de las estrella
 int Velocidad_titileo = 7;           // Cada cuántos frames cambia el titileo
 
 // ---------- Interfaz ----------
+
 PFont fuenteBoton;
 Pantallas GestorPantallas;  // Gestor que dibuja las pantallas secundarias
-float pantalla = 1;            // 1: Menú, 1.5: Historia, 2: Juego, 3: How to play, 4: Settings, 5: Credits
+float pantalla = 1;           // 1: Menú, 1.5: Historia, 2: Juego, 3: How to play, 4: Settings, 5: Credits
 
 // ---------- Ajustes y pausa ----------
+
 int dificultad = 2;            // 1: Fácil, 2: Normal, 3: Difícil
 int velocidadNave = 10;
 String Modo_juego = "HISTORIA";
 boolean JuegoPausado = false;  // true si el juego está en pausa
-boolean juegoGanado = false;
+boolean JuegoGanado = false;
 boolean victoriaSonada = false;
 boolean gameOver = false;
 
 // ---------- Naves ----------
+
 PImage Nave_Jugador;
 PImage naveRoja;
 PImage naveVerde;
@@ -33,17 +38,17 @@ PImage naveGris;
 int maxEnemigos = 27;
 Naves Jugador;
 
-
 // ---------- Vidas y Puntos ----------
 PImage corazones;
 int Puntos = 0;
 
 // ---------- Sonidos ----------
+
 SoundFile sfxLaserShoot;
 SoundFile sfxExplosion;
 SoundFile sfxVictory;
-SoundFile musicaFondo;
-
+SoundFile musicaJuego;
+SoundFile musicaMenu;
 
 void setup() {
   fullScreen();
@@ -56,6 +61,8 @@ void setup() {
   fuenteHistoria = createFont("font_historia.ttf", 40);
   cargarImagenes();
   cargarSonidos();
+  musicaMenu.loop();
+  musicaMenu.amp(0.5);
 
   capaTexto = createGraphics(width, height);
   capaTexto.smooth(3);
@@ -63,10 +70,8 @@ void setup() {
   textFont(fuenteBoton);
 
   GestorPantallas = new Pantallas();
-  Jugador = new Naves(Nave_Jugador, width / 2, height + 64, 0);   // La nave del Jugador inicia bajo la pantalla y sube hasta su posición
+  Jugador = new Naves(Nave_Jugador, width / 2, height + 100, 0);  // La nave del Jugador inicia bajo la pantalla y sube hasta su posición
   crearEnemigos();
-
-  musicaFondo.loop();
 
   // Botones del menú, uno debajo del otro
 
@@ -107,15 +112,16 @@ void cargarImagenes() {
 void cargarSonidos() {
   sfxLaserShoot = new SoundFile(this, "laserShoot.wav");
   sfxExplosion = new SoundFile(this, "explosion.wav");
-  sfxVictory = new SoundFile(this, "victory.wav");
-  musicaFondo = new SoundFile(this, "musica_fondo.wav");
+  sfxVictory = new SoundFile(this, "byte_invaders_victory.wav");
+  musicaJuego = new SoundFile(this, "byte_invaders_theme.wav");
+  musicaMenu = new SoundFile(this, "byte_invaders_menu_chill.wav");
 }
 
 void draw() {
 
   // Fondo: se desplaza en el juego y queda quieto en las demás pantallas
 
-  if (pantalla == 2 && !JuegoPausado && !juegoGanado) {
+  if (pantalla == 2 && !JuegoPausado && !JuegoGanado) {
     fondoY += velocidadFondo;
     if (fondoY >= height) {
       fondoY -= height;  // vuelve al inicio del bucle
@@ -123,12 +129,12 @@ void draw() {
   } else if (pantalla != 2) {
     fondoY = height / 2;
   }
-
   dibujarFondo(fondoY);
 
   // Contenido de cada pantalla
+
   if (pantalla == 1) {
-    apariencia_menu();
+    aparienciaMenu();
   } else if (pantalla == 1.5) {
     dibujarHistoria();
   } else if (pantalla == 2) {
@@ -142,11 +148,10 @@ void draw() {
   }
 }
 void reiniciarPartida() {
-  juegoGanado = false;
+  JuegoGanado = false;
   victoriaSonada = false;
   gameOver = false;
   JuegoPausado = false;
-
   Jugador.x = width/2;
   Jugador.y = height - 100;
 
@@ -169,6 +174,15 @@ boolean sobreRect(float cx, float cy, float w, float h) {
   return mouseX >= cx - w/2 && mouseX <= cx + w/2 &&
     mouseY >= cy - h/2 && mouseY <= cy + h/2;
 }
+
+// Vuelve al menú cambiando la música: se usa desde HOME, la victoria y el Game Over
+void volverAlMenu() {
+  musicaJuego.stop();
+  musicaMenu.loop();
+  musicaMenu.amp(0.5);
+  pantalla = 1;
+}
+
 void mousePressed() {
 
   // ---------- MENU PRINCIPAL ----------
@@ -177,8 +191,11 @@ void mousePressed() {
     for (int i = 0; i < botonesMenu.length; i++) {
       if (botonesMenu[i].sobreBoton) {
 
-        // Reiniciar la partida al pulsar START GAME
         if (i == 0) {
+          // START GAME: música del juego y partida nueva
+          musicaMenu.stop();
+          musicaJuego.loop();
+          musicaJuego.amp(0.5);
           reiniciarPartida();
           pantalla = 1.5;
         } else {
@@ -186,20 +203,26 @@ void mousePressed() {
         }
       }
     }
+
+    // ---------- JUEGO ----------
+
   } else if (pantalla == 2) {
 
-    // ---------- VICTORIA o GAME OVER----------
     if (gameOver) {
-      if (sobreRect(width/2 - 50, height/2 + 150, 80, 60)) {         // SÍ
+      // GAME OVER: SÍ / NO
+      if (sobreRect(width/2 - 50, height/2 + 150, 80, 60)) {          // SÍ
         reiniciarPartida();   // se queda en pantalla 2: salta la historia
-      } else if (sobreRect(width/2 + 50, height/2 + 150, 80, 60)) {  // NO
-        pantalla = 1;
+      } else if (sobreRect(width/2 + 50, height/2 + 150, 80, 60)) {   // NO
+        volverAlMenu();
       }
-    } else if (juegoGanado) {
+
+    } else if (JuegoGanado) {
+      // VICTORIA: botón BACK
       if (mouseX >= width/2 - 80 && mouseX <= width/2 + 80 &&
         mouseY >= height - 125 && mouseY <= height - 75) {
-        pantalla = 1;
+        volverAlMenu();
       }
+
     } else {
 
       float bx = width - 70;
@@ -224,11 +247,13 @@ void mousePressed() {
         if (mouseX >= width/2 - 100 && mouseX <= width/2 + 100 &&
           mouseY >= btnY2 - 22 && mouseY <= btnY2 + 22) {
           JuegoPausado = false;
-          pantalla = 1;
+          volverAlMenu();
         }
       }
     }
+
     // ---------- HOW TO PLAY / SETTINGS / CREDITS ----------
+
   } else {
     if (pantalla == 4) {
       float startX = width/2 - 260;
@@ -253,7 +278,8 @@ void mousePressed() {
         }
       }
     }
-    if (pantalla == 3 || pantalla == 4 || pantalla == 5 || juegoGanado) {
+
+    if (pantalla == 3 || pantalla == 4 || pantalla == 5) {
       // Botón BACK
       if (mouseX >= width/2 - 80 && mouseX <= width/2 + 80 &&
         mouseY >= height - 125 && mouseY <= height - 75) {

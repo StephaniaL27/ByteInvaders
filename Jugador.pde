@@ -19,7 +19,6 @@ void keyPressed() {
 
   if (keyCode == ENTER && pantalla == 2)
     JuegoPausado = !JuegoPausado;
-
   if (key == 'w' || key == 'W' || keyCode == UP)
     arriba = true;
   if (key == 'a' || key == 'A' || keyCode == LEFT)
@@ -100,6 +99,7 @@ void derribarEnemigo() {
                 aliadosCaidos = 0;
               }
             }
+
             existe[j] = false;
             balaActiva[i] = false;
             sw = 1;
@@ -121,9 +121,12 @@ void keyReleased() {
     abajo = false;
   if (key == 'd' || key == 'D' || keyCode == RIGHT)
     derecha = false;
-
   if (key == ' ')
     espacio = false;
+  if (keyCode == TAB)
+    JuegoGanado = true;
+  if (keyCode == ALT)
+    gameOver = true;
 }
 
 void moverJugador() {

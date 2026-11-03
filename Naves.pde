@@ -28,7 +28,6 @@ class Naves {
     if (!JuegoPausado && frameCount % 8 == 0) {
       FrameActual = (FrameActual + 1) % Frames.length;
     }
-
     image(Frames[FrameActual], x, y, 64 * 2, 64 * 2);
   }
 }
@@ -168,9 +167,8 @@ void choqueNaves() {
 
 
 void dibujarJuego() {
-  if (!juegoGanado && !gameOver) {
+  if (!JuegoGanado && !gameOver) {
     Jugador.dibujarNave();
-
     for (int i = 0; i < maxEnemigos; i++) {
       if (existe[i]) {
         enemigo[i].dibujarNave();
@@ -195,14 +193,15 @@ void dibujarJuego() {
       text(Puntos, width/2 - 500, 70);
 
       if (nahIdWin(0, maxEnemigos) == 1 && !victoriaSonada) {
-        juegoGanado = true;
+        JuegoGanado = true;
+        musicaJuego.stop();
         sfxVictory.play();
         victoriaSonada = true;
       }
     }
   }
 
-  if (juegoGanado) {
+  if (JuegoGanado) {
     GestorPantallas.dibujarVictoria();
   } else if (gameOver) {
     GestorPantallas.dibujarGameOver();

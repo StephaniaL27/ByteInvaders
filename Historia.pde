@@ -25,6 +25,7 @@ float tamañoT = 30;
 float tramo = 0.8;        // más alto = el encogimiento empieza antes
 float escalaMin = 0.3;    // tamaño mínimo arriba (1 = sin encoger)
 float desvanece = 0.25;   // más alto = se desvanece desde más abajo
+
 PFont fuenteHistoria;
 PGraphics capaTexto;
 
@@ -37,11 +38,11 @@ void dibujarHistoria() {
 
   for (int i = 0; i < historia.length; i++) {
     float y = height + i * interlineado - scroll;
-    float u = max((y - salida) / (height - salida), 0);   // 0 arriba, 1 abajo
+    float u = max((y - salida) / (height - salida), 0);   // 0: arriba, 1: abajo
     float yPantalla = salida + (height - salida) * pow(u, 1.5);
 
     float s = constrain(u / tramo, 0, 1);
-    s = s * s * (3 - 2 * s);                 // suaviza el inicio y el final del cambio
+    s = s * s * (3 - 2 * s);                 // Suaviza el inicio y el final del cambio
     float escala = lerp(escalaMin, 1, s);
     float opacidad = constrain(map(u, 0, desvanece, 0, 255), 0, 255);
 
@@ -68,7 +69,7 @@ void dibujarHistoria() {
 
 void texto(PGraphics g, String s, float x, float y, float prof, float opacidad) {
   for (int k = int(prof); k >= 1; k--) {
-    color c = lerpColor(#FFED00, #B84400, k / prof);   // más oscuro cuanto más lejos
+    color c = lerpColor(#FFED00, #B84400, k / prof);   // Más oscuro cuanto más lejos
     g.fill(c, opacidad);
     g.text(s, x - k, y + k);
   }
