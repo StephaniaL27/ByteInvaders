@@ -25,9 +25,7 @@ float tamañoT = 30;
 float tramo = 0.8;        // más alto = el encogimiento empieza antes
 float escalaMin = 0.3;    // tamaño mínimo arriba (1 = sin encoger)
 float desvanece = 0.25;   // más alto = se desvanece desde más abajo
-
 PFont fuenteHistoria;
-
 PGraphics capaTexto;
 
 void dibujarHistoria() {

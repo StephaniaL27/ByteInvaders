@@ -3,7 +3,6 @@ boolean izquierda;
 boolean abajo;
 boolean derecha;
 boolean espacio = false;
-
 int maxDisparos = 4;
 float[] disparosX = new float[maxDisparos];
 float[] disparosY = new float[maxDisparos];
@@ -12,6 +11,7 @@ boolean[] balaActiva = new boolean[maxDisparos];
 int ultimoDisparo = 0;
 int inicioCooldown = 0;
 int duracionCooldown = 0;
+int aliadosCaidos = 0;
 
 void keyPressed() {
 
@@ -88,7 +88,18 @@ void derribarEnemigo() {
         if (existe[j]) {
           if (abs(disparosX[i] - enemigo[j].x) <= 48 && abs(disparosY[i] - enemigo[j].y) <= 48) {
             sfxExplosion.play();
-
+            if (enemigo[j].tipo == 1) {
+              Puntos += 100;
+            } else if (enemigo[j].tipo == 2) {
+              if (Puntos >= 100) {
+                Puntos -= 100;
+              }
+              aliadosCaidos += 1;
+              if (aliadosCaidos == 2) {
+                perderVida();
+                aliadosCaidos = 0;
+              }
+            }
             existe[j] = false;
             balaActiva[i] = false;
             sw = 1;

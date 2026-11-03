@@ -70,11 +70,11 @@ class Pantallas {
     stroke(#FF7700);
     strokeWeight(2);
     fill(#FF7700, 80);
-    rect(inicioX + 220, height/2 + 80, 160, 38, 10);
+    rect(inicioX + 230, height/2 + 80, 160, 38, 10);
     fill(#FF7700);
     textAlign(CENTER, CENTER);
     textSize(16);
-    text("HISTORIA", inicioX + 220, height/2 + 80);
+    text("HISTORIA", inicioX + 230, height/2 + 80);
 
     dibujarBotonAtras();
   }
@@ -231,9 +231,21 @@ class Pantallas {
   }
 
   void dibujarBotonAtras() {
-    fill(#0F0F0B);
-    rect(width/2, height - 100, 160, 50, 12);
+    float backW = 160;
+    float backH = 50;
+    float backX = width/2;
+    float backY = height -100;
+    boolean overButton =
+      mouseX >= backX - backW/2 && mouseX <= backX + backW/2 &&
+      mouseY >= backY-backH/2 && mouseY <= backY + backH/2;
 
+    noStroke();
+    if (overButton) {
+      strokeWeight(3);
+      stroke(#FF4000);
+    }
+    fill(#0F0F0B);
+    rect(backX, backY, backW, backH, 12);
     fill(255);
     textAlign(CENTER, CENTER);
     textSize(24);
@@ -243,18 +255,45 @@ class Pantallas {
   void dibujarVictoria() {
     stroke(#00FFFF);
     strokeWeight(3);
-    fill(10,15,30,230);
-    rect(width/2,height/2,700,230,20);
+    fill(10, 15, 30, 230);
+    rect(width/2, height/2, 0.8*width, 0.7*height, 20);
 
-    textAlign(CENTER,CENTER);
+    textAlign(CENTER, CENTER);
     fill(#FFE600);
-    textSize(55);
-    text("¡EQUILIBRIO RESTAURADO!", width / 2, height / 2 - 45);
+    textSize(90);
+    text("¡EQUILIBRIO RESTAURADO!", width / 2, height / 2 - 100);
 
     fill(#00FF66);
-    textSize(30);
-    text("THE NETWORK ESTÁ A SALVO", width / 2, height / 2 + 15);
+    textSize(40);
+    text("THE NETWORK ESTÁ A SALVO", width / 2, height / 2);
+
+    fill(#FFFFFF);
+    textSize(35);
+    text("No todo mensaje merece una respuesta. \nElegir qué bloqueas, qué apoyas y qué ignoras también \nes cuidar a los demás.", width/2, height/2 + 100);
 
     dibujarBotonAtras();
+  }
+
+  void dibujarGameOver() {
+    stroke(#00FFFF);
+    strokeWeight(3);
+    fill(10, 15, 30, 230);
+    rect(width/2, height/2, 0.8*width, 0.8*height, 20);
+
+    textAlign(CENTER, CENTER);
+    fill(#FF0808);
+    textSize(100);
+    text("GAME OVER", width / 2, height / 2 - 100);
+
+    fill(#FCFFA2);
+    textSize(50);
+    text("Las señales hostiles ganaron terreno.", width / 2, height / 2 - 5);
+
+    fill(#FFFFFF);
+    text("¿Jugar de nuevo?", width/2, height/2 + 80);
+    fill(sobreRect(width/2 - 50, height/2 + 150, 80, 60) ? #FFED00 : #FFFFFF);
+    text("SI", width/2 - 50, height/2 + 150);
+    fill(sobreRect(width/2 + 50, height/2 + 150, 80, 60) ? #FFED00 : #FFFFFF);
+    text("NO", width/2 + 50, height/2 + 150);
   }
 }

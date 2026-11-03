@@ -1,5 +1,4 @@
 PImage imagenNave;
-
 int cantidadVidas = 3;
 int direccionEnemigo[] = {1, -1, 1};
 float velocidadEnemigo;
@@ -29,9 +28,8 @@ class Naves {
     if (!JuegoPausado && frameCount % 8 == 0) {
       FrameActual = (FrameActual + 1) % Frames.length;
     }
-    
-    image(Frames[FrameActual], x, y, 64 * 2, 64 * 2);
 
+    image(Frames[FrameActual], x, y, 64 * 2, 64 * 2);
   }
 }
 
@@ -39,19 +37,19 @@ void crearEnemigos() { // Función para crear la lista que contien a los enemigo
   int  k = 0;
   int colorNave;
   float enemigoX, enemigoY;
-  
+
   for (int i = 0; i < 3; i++) {
     for (int j = 0; j < 9; j++) {
       colorNave = int(random(1, 4));  // Para que las naves aparezcan de manera aleatoria en la pantalla
       switch(colorNave) {
-        case 1:
-          imagenNave = naveRoja;
+      case 1:
+        imagenNave = naveRoja;
         break;
-        case 2:
-          imagenNave = naveVerde;
+      case 2:
+        imagenNave = naveVerde;
         break;
-        default:
-          imagenNave = naveGris;
+      default:
+        imagenNave = naveGris;
       }
 
       enemigoX  = width / 2 - 4 * 128 + j * 128;
@@ -66,14 +64,14 @@ void crearEnemigos() { // Función para crear la lista que contien a los enemigo
 
 void moverEnemigos() {
   switch(dificultad) {
-    case 1:
-      velocidadEnemigo = 6;
+  case 1:
+    velocidadEnemigo = 6;
     break;
-    case 2:
-      velocidadEnemigo = 9;
+  case 2:
+    velocidadEnemigo = 9;
     break;
-    default:
-      velocidadEnemigo = 12;
+  default:
+    velocidadEnemigo = 12;
   }
   if (!JuegoPausado) {
     float minX = 64;
@@ -99,10 +97,10 @@ void moverEnemigos() {
   }
 }
 
-int nahIdWin(int i, int t){
+int nahIdWin(int i, int t) {
   int gojoWon = 1;
   if (i < t) {
-    if (existe[i]) {
+    if (existe[i] && enemigo[i].tipo == 1) {
       gojoWon = 0;
     } else {
       gojoWon = nahIdWin(i + 1, t);
@@ -110,6 +108,8 @@ int nahIdWin(int i, int t){
   }
   return gojoWon;
 }
+
+
 
 int FrameActualC = 0;
 float Xinicial = 100;
@@ -121,7 +121,7 @@ void dibujarVidas() {
   for (int j = 0; j < FramesC.length; j++) {
     FramesC[j] = corazones.get(j * 32, 0, 32, 32);  // recorta cada cuadro de 32x32
   }
-  for (int i = 0; i < 3; i++) {
+  for (int i = 0; i < cantidadVidas; i++) {
     if (!JuegoPausado && frameCount % 8 == 0) {
       FrameActualC = (FrameActualC + 1) % FramesC.length;
     }
@@ -129,8 +129,46 @@ void dibujarVidas() {
   }
 }
 
+float radioChoque = 70;   // aprox. mitad de la nave dibujada (128/2);
+void perderVida() {
+  cantidadVidas -= 1;
+  if (cantidadVidas <= 0) {
+    cantidadVidas = 0;
+    gameOver = true;
+  }
+}
+
+void gameOver() {
+}
+
+void choqueNaves() {
+  for (int i = 0; i < maxEnemigos; i++) {
+    if (existe[i] &&
+      abs(enemigo[i].x - Jugador.x) < radioChoque &&
+      abs(enemigo[i].y - Jugador.y) < radioChoque) {
+
+      switch (enemigo[i].tipo) {
+      case 1:  // roja: pierdes una vida
+        sfxExplosion.play();
+        perderVida();
+        break;
+      case 2:  // verde: puntos y vida (máximo 3)
+        Puntos += 50;
+        cantidadVidas = min(cantidadVidas + 1, 3);
+        break;
+      case 3:  // gris: distracción, no puedes disparar 2 s
+        inicioCooldown = millis();
+        duracionCooldown = 2000;
+        break;
+      }
+      existe[i] = false;  // la nave tocada desaparece
+    }
+  }
+}
+
+
 void dibujarJuego() {
-  if (!juegoGanado) {
+  if (!juegoGanado && !gameOver) {
     Jugador.dibujarNave();
 
     for (int i = 0; i < maxEnemigos; i++) {
@@ -138,8 +176,8 @@ void dibujarJuego() {
         enemigo[i].dibujarNave();
       }
     }
-    
-    if(!JuegoPausado) {
+
+    if (!JuegoPausado) {
       moverJugador();
       moverEnemigos();
 
@@ -149,6 +187,12 @@ void dibujarJuego() {
 
       dibujarDisparos();
       derribarEnemigo();
+      choqueNaves();
+
+      dibujarVidas();
+      fill(#ffffff);
+      textSize(40);
+      text(Puntos, width/2 - 500, 70);
 
       if (nahIdWin(0, maxEnemigos) == 1 && !victoriaSonada) {
         juegoGanado = true;
@@ -160,6 +204,8 @@ void dibujarJuego() {
 
   if (juegoGanado) {
     GestorPantallas.dibujarVictoria();
+  } else if (gameOver) {
+    GestorPantallas.dibujarGameOver();
   } else {
     GestorPantallas.dibujarBotonPausaHUD();
 
@@ -167,9 +213,4 @@ void dibujarJuego() {
       GestorPantallas.dibujarVentanaPausa();
     }
   }
-
-  dibujarVidas();
-  fill(#ffffff);
-  textSize(40);
-  text(Puntos, width/2 - 500, 70);
 }

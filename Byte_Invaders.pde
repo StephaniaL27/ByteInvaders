@@ -18,11 +18,12 @@ float pantalla = 1;            // 1: Menú, 1.5: Historia, 2: Juego, 3: How to p
 
 // ---------- Ajustes y pausa ----------
 int dificultad = 2;            // 1: Fácil, 2: Normal, 3: Difícil
-int velocidadNave = 6;        // 1: Lenta, 2: Normal, 3: Rápida
+int velocidadNave = 10;
 String Modo_juego = "HISTORIA";
 boolean JuegoPausado = false;  // true si el juego está en pausa
 boolean juegoGanado = false;
 boolean victoriaSonada = false;
+boolean gameOver = false;
 
 // ---------- Naves ----------
 PImage Nave_Jugador;
@@ -33,7 +34,7 @@ int maxEnemigos = 27;
 Naves Jugador;
 
 
-// ---------- Vidas ----------
+// ---------- Vidas y Puntos ----------
 PImage corazones;
 int Puntos = 0;
 
@@ -139,11 +140,35 @@ void draw() {
   } else {
     GestorPantallas.dibujarCreditos();
   }
+}
+void reiniciarPartida() {
+  juegoGanado = false;
+  victoriaSonada = false;
+  gameOver = false;
+  JuegoPausado = false;
 
-  switch (dificultad) {
+  Jugador.x = width/2;
+  Jugador.y = height - 100;
+
+  for (int j = 0; j < maxDisparos; j++) {
+    balaActiva[j] = false;
   }
+  duracionCooldown = 0;
+
+  direccionEnemigo[0] = 1;
+  direccionEnemigo[1] = -1;
+  direccionEnemigo[2] = 1;
+  crearEnemigos();
+  cantidadVidas = 3;
+  Puntos = 0;
+  aliadosCaidos = 0;
+  scroll = 0;
 }
 
+boolean sobreRect(float cx, float cy, float w, float h) {
+  return mouseX >= cx - w/2 && mouseX <= cx + w/2 &&
+    mouseY >= cy - h/2 && mouseY <= cy + h/2;
+}
 void mousePressed() {
 
   // ---------- MENU PRINCIPAL ----------
@@ -153,24 +178,8 @@ void mousePressed() {
       if (botonesMenu[i].sobreBoton) {
 
         // Reiniciar la partida al pulsar START GAME
-
         if (i == 0) {
-          juegoGanado = false;
-          victoriaSonada = false;
-
-          Jugador.x = width/2;
-          Jugador.y = height - 100;
-
-          for (int j = 0; j < maxDisparos; j++) {
-            balaActiva[j] = false;
-          }
-
-          direccionEnemigo[0] = 1;
-          direccionEnemigo[1] = -1;
-          direccionEnemigo[2] = 1;
-          crearEnemigos();
-        }
-        if (i == 0) {
+          reiniciarPartida();
           pantalla = 1.5;
         } else {
           pantalla = i + 2;
@@ -179,9 +188,14 @@ void mousePressed() {
     }
   } else if (pantalla == 2) {
 
-    // ---------- VICTORIA ----------
-
-    if (juegoGanado) {
+    // ---------- VICTORIA o GAME OVER----------
+    if (gameOver) {
+      if (sobreRect(width/2 - 50, height/2 + 150, 80, 60)) {         // SÍ
+        reiniciarPartida();   // se queda en pantalla 2: salta la historia
+      } else if (sobreRect(width/2 + 50, height/2 + 150, 80, 60)) {  // NO
+        pantalla = 1;
+      }
+    } else if (juegoGanado) {
       if (mouseX >= width/2 - 80 && mouseX <= width/2 + 80 &&
         mouseY >= height - 125 && mouseY <= height - 75) {
         pantalla = 1;
@@ -214,6 +228,7 @@ void mousePressed() {
         }
       }
     }
+    // ---------- HOW TO PLAY / SETTINGS / CREDITS ----------
   } else {
     if (pantalla == 4) {
       float startX = width/2 - 260;
@@ -237,7 +252,8 @@ void mousePressed() {
           velocidadNave = 9;
         }
       }
-
+    }
+    if (pantalla == 3 || pantalla == 4 || pantalla == 5 || juegoGanado) {
       // Botón BACK
       if (mouseX >= width/2 - 80 && mouseX <= width/2 + 80 &&
         mouseY >= height - 125 && mouseY <= height - 75) {
