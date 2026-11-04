@@ -1,0 +1,87 @@
+void cargarFramesVidas() {
+  for (int i = 0; i < FramesC.length; i++) {
+    FramesC[i] = corazones.get(i * 32, 0, 32, 32);
+  }
+}
+
+void dibujarVidas() {
+  if (!juegoPausado && frameCount % 8 == 0) {
+    FrameActualC = (FrameActualC + 1) % FramesC.length;
+  }
+  for (int i = 0; i < cantidadVidas; i++) {
+    image(FramesC[FrameActualC], Xinicial + distanciaC * i, Y, 64, 64);
+  }
+}
+
+void perderVida() {
+  cantidadVidas--;
+  if (cantidadVidas <= 0) {
+    cantidadVidas = 0;
+    gameOver = true;
+  }
+}
+
+void choqueNaves() {
+  for (int i = 0; i < maxEnemigos; i++) {
+    if (existe[i] && abs(enemigo[i].x - jugador.x) < radioChoque &&
+      abs(enemigo[i].y - jugador.y) < radioChoque) {
+
+      switch (enemigo[i].tipo) {
+      case 1:
+        sfxExplosion.play();
+        perderVida();
+        break;
+      case 2:
+        Puntos += 50;
+        cantidadVidas = min(cantidadVidas + 1, 3);
+        break;
+      case 3:
+        inicioCooldown = millis();
+        duracionCooldown = 2000;
+        break;
+      }
+      existe[i] = false;
+    }
+  }
+}
+
+void dibujarJuego() {
+  if (!juegoGanado && !gameOver) {
+    jugador.dibujarNave();
+    for (int i = 0; i < maxEnemigos; i++) {
+      if (existe[i]) enemigo[i].dibujarNave();
+    }
+
+    if (!juegoPausado) {
+      moverJugador();
+      moverEnemigos();
+      if (espacio && millis() - inicioCooldown >= duracionCooldown) disparar();
+
+      dibujarDisparos();
+      derribarEnemigo();
+      choqueNaves();
+
+      if (nahIdWin(0, maxEnemigos) == 1 && !victoriaSonada) {
+        juegoGanado = true;
+        musicaJuego.stop();
+        sfxVictory.play();
+        victoriaSonada = true;
+      }
+    }
+  }
+
+  // HUD visible tanto durante el juego como durante la pausa.
+  dibujarVidas();
+  fill(#FFFFFF);
+  textSize(40);
+  text(Puntos, width / 2 - 500, 70);
+
+  if (juegoGanado) {
+    GestorPantallas.dibujarVictoria();
+  } else if (gameOver) {
+    GestorPantallas.dibujarGameOver();
+  } else {
+    GestorPantallas.dibujarBotonPausaHUD();
+    if (juegoPausado) GestorPantallas.dibujarVentanaPausa();
+  }
+}
