@@ -1,0 +1,21 @@
+void cargarImagenes() {
+  tituloMenu = loadImage("titulo_byteinvaders.png");
+  corazones = loadImage("corazones.png");
+  Nave_jugador = loadImage("nave.png");
+  naveRoja = loadImage("nave_roja.png");
+  naveVerde = loadImage("nave_verde.png");
+  naveGris = loadImage("nave_npc.png");
+  fondo = loadImage("fondo_loop_1920x1080.png");
+
+  for (int i = 0; i < estrellas.length; i++) {
+    estrellas[i] = loadImage("estrellas_" + i + ".png");
+  }
+}
+
+void cargarSonidos() {
+  sfxLaserShoot = new SoundFile(this, "laserShoot.wav");
+  sfxExplosion = new SoundFile(this, "explosion.wav");
+  sfxVictory = new SoundFile(this, "byte_invaders_victory.wav");
+  musicaJuego = new SoundFile(this, "byte_invaders_theme.wav");
+  musicaMenu = new SoundFile(this, "byte_invaders_menu_chill.wav");
+}
