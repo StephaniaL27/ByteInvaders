@@ -1,44 +1,9 @@
-boolean arriba;
-boolean izquierda;
-boolean abajo;
-boolean derecha;
-boolean espacio = false;
-int maxDisparos = 4;
-float[] disparosX = new float[maxDisparos];
-float[] disparosY = new float[maxDisparos];
-float velocidadDisparos = 20;
-boolean[] balaActiva = new boolean[maxDisparos];
-int ultimoDisparo = 0;
-int inicioCooldown = 0;
-int duracionCooldown = 0;
-int aliadosCaidos = 0;
-
-void keyPressed() {
-
-  // Tecla para pausar el juego
-
-  if (keyCode == ENTER && pantalla == 2)
-    JuegoPausado = !JuegoPausado;
-  if (key == 'w' || key == 'W' || keyCode == UP)
-    arriba = true;
-  if (key == 'a' || key == 'A' || keyCode == LEFT)
-    izquierda = true;
-  if (key == 's' || key == 'S' || keyCode == DOWN)
-    abajo = true;
-  if (key == 'd' || key == 'D' || keyCode == RIGHT)
-    derecha = true;
-  if (key == ' ')
-    espacio = true;
-  if (key == 's' && pantalla == 1.5)
-    pantalla = 2;
-}
-
 void disparar() {
   boolean puedeDisparar = true;
   int i = 0;
 
   while (i < maxDisparos && puedeDisparar) {
-    if (balaActiva[i] && disparosY[i] > Jugador.y - 300) {
+    if (balaActiva[i] && disparosY[i] > jugador.y - 300) {
       puedeDisparar = false;
     }
     i++;
@@ -46,10 +11,9 @@ void disparar() {
 
   if (puedeDisparar && !balaActiva[ultimoDisparo]) {
     sfxLaserShoot.play();
-
     balaActiva[ultimoDisparo] = true;
-    disparosX[ultimoDisparo] = Jugador.x;
-    disparosY[ultimoDisparo] = Jugador.y;
+    disparosX[ultimoDisparo] = jugador.x;
+    disparosY[ultimoDisparo] = jugador.y;
     ultimoDisparo++;
 
     if (ultimoDisparo == maxDisparos) {
@@ -66,87 +30,55 @@ void disparar() {
 void dibujarDisparos() {
   for (int i = 0; i < maxDisparos; i++) {
     if (balaActiva[i]) {
-      fill(#4080d2);
+      fill(#4080D2);
       rect(disparosX[i], disparosY[i], 5, 20);
       disparosY[i] -= velocidadDisparos;
     }
-
-    if (disparosY[i] < 0) {
-      balaActiva[i] = false;
-    }
+    if (disparosY[i] < 0) balaActiva[i] = false;
   }
 }
 
 void derribarEnemigo() {
-  int i = 0, j = 0, sw = 0;
+  int i = 0;
+  int j;
+  boolean impacto = false;
 
-  while (i < maxDisparos && sw == 0) {
+  while (i < maxDisparos && !impacto) {
     if (balaActiva[i]) {
       j = 0;
-      while (j < maxEnemigos && sw == 0) {
-        if (existe[j]) {
-          if (abs(disparosX[i] - enemigo[j].x) <= 48 && abs(disparosY[i] - enemigo[j].y) <= 48) {
-            sfxExplosion.play();
-            if (enemigo[j].tipo == 1) {
-              Puntos += 100;
-            } else if (enemigo[j].tipo == 2) {
-              if (Puntos >= 100) {
-                Puntos -= 100;
-              }
-              aliadosCaidos += 1;
-              if (aliadosCaidos == 2) {
-                perderVida();
-                aliadosCaidos = 0;
-              }
+      while (j < maxEnemigos && !impacto) {
+        if (existe[j] && abs(disparosX[i] - enemigo[j].x) <= 48 &&
+          abs(disparosY[i] - enemigo[j].y) <= 48) {
+          sfxExplosion.play();
+          if (enemigo[j].tipo == 1) {
+            Puntos += 100;
+          } else if (enemigo[j].tipo == 2) {
+            if (Puntos >= 100) Puntos -= 100;
+            aliadosCaidos++;
+            if (aliadosCaidos == 2) {
+              perderVida();
+              aliadosCaidos = 0;
             }
-
-            existe[j] = false;
-            balaActiva[i] = false;
-            sw = 1;
           }
+          existe[j] = false;
+          balaActiva[i] = false;
+          impacto = true;
         }
-        j += 1;
+        j++;
       }
     }
-    i += 1;
+    i++;
   }
 }
 
-void keyReleased() {
-  if (key == 'w' || key == 'W' || keyCode == UP)
-    arriba = false;
-  if (key == 'a' || key == 'A' || keyCode == LEFT)
-    izquierda = false;
-  if (key == 's' || key == 'S' || keyCode == DOWN)
-    abajo = false;
-  if (key == 'd' || key == 'D' || keyCode == RIGHT)
-    derecha = false;
-  if (key == ' ')
-    espacio = false;
-  if (keyCode == TAB)
-    JuegoGanado = true;
-  if (keyCode == ALT)
-    gameOver = true;
-}
-
 void moverJugador() {
-  if (arriba)
-    Jugador.y -= velocidadNave;
-  if (izquierda)
-    Jugador.x -= velocidadNave;
-  if (abajo)
-    Jugador.y += velocidadNave;
-  if (derecha)
-    Jugador.x += velocidadNave;
+  if (arriba) jugador.y -= velocidadNave;
+  if (izquierda) jugador.x -= velocidadNave;
+  if (abajo) jugador.y += velocidadNave;
+  if (derecha) jugador.x += velocidadNave;
 
-  // límites de pantalla
-
-  if (Jugador.y <= 64)
-    Jugador.y += velocidadNave;
-  if (Jugador.x <= 64)
-    Jugador.x += velocidadNave;
-  if (Jugador.y >= height - 64)
-    Jugador.y -= velocidadNave;
-  if (Jugador.x >= width - 64)
-    Jugador.x -= velocidadNave;
+  if (jugador.y <= 64) jugador.y = 64;
+  if (jugador.x <= 64) jugador.x = 64;
+  if (jugador.y >= height - 64) jugador.y = height - 64;
+  if (jugador.x >= width - 64) jugador.x = width - 64;
 }
