@@ -1,21 +1,69 @@
 // ---------- Estado general ----------
-float pantalla = 1;  // 1: menú, 1.5: historia, 2: juego, 3: instrucciones, 4: ajustes, 5: créditos
+
+float pantalla = 1;
+
 boolean juegoPausado = false;
 boolean juegoGanado = false;
 boolean victoriaSonada = false;
 boolean gameOver = false;
 
 // ---------- Ajustes ----------
-int dificultad = 2;       // 1: fácil, 2: normal, 3: difícil
-int velocidadNave = 6;    // 3: lenta, 6: normal, 9: rápida
+
+int dificultad = 2;
+int velocidadNave = 6;
+
+// ---------- Jugador ----------
+
+boolean arriba;
+boolean izquierda;
+boolean abajo;
+boolean derecha;
+
+Naves jugador;
+
+// ---------- Enemigos ----------
+
+int maxEnemigos = 27;
+int[] direccionEnemigo = {1, -1, 1};
+
+float velocidadEnemigo;
+
+boolean[] existe = new boolean[maxEnemigos];
+
+Naves[] enemigo = new Naves[maxEnemigos];
+
+// ---------- Disparos ----------
+
+int maxDisparos = 4;
+int ultimoDisparo = 0;
+int inicioCooldown = 0;
+int duracionCooldown = 0;
+
+float[] disparosX = new float[maxDisparos];
+float[] disparosY = new float[maxDisparos];
+float velocidadDisparos = 20;
+
+boolean espacio = false;
+boolean[] balaActiva = new boolean[maxDisparos];
+
+// ---------- Puntuación y vidas ----------
+
+int cantidadVidas = 3;
+int Puntos = 0;
+int aliadosCaidos = 0;
+
+float radioChoque = 70;
 
 // ---------- Interfaz ----------
-PFont fuenteBoton;
-Pantallas GestorPantallas;
-Boton[] botonesMenu = new Boton[4];
+
 float radioEsquinas = 50;
 
+Pantallas GestorPantallas;
+Boton[] botonesMenu = new Boton[4];
+PFont fuenteBoton;
+
 // ---------- Recursos gráficos ----------
+
 PImage tituloMenu;
 PImage fondo;
 PImage[] estrellas = new PImage[8];
@@ -26,46 +74,25 @@ PImage naveVerde;
 PImage naveGris;
 
 // ---------- Fondo animado ----------
-float velocidadFondo = 5;
-float fondoY = -velocidadFondo;
+
 int Frame_estrellas = 0;
 int Velocidad_titileo = 7;
 
-// ---------- Naves y enemigos ----------
-int maxEnemigos = 27;
-Naves jugador;
-Naves[] enemigo = new Naves[maxEnemigos];
-boolean[] existe = new boolean[maxEnemigos];
-int[] direccionEnemigo = {1, -1, 1};
-float velocidadEnemigo;
+float velocidadFondo = 5;
+float fondoY = -velocidadFondo;
 
-// ---------- Disparos ----------
-boolean arriba;
-boolean izquierda;
-boolean abajo;
-boolean derecha;
-boolean espacio = false;
-int maxDisparos = 4;
-float[] disparosX = new float[maxDisparos];
-float[] disparosY = new float[maxDisparos];
-float velocidadDisparos = 20;
-boolean[] balaActiva = new boolean[maxDisparos];
-int ultimoDisparo = 0;
-int inicioCooldown = 0;
-int duracionCooldown = 0;
-int aliadosCaidos = 0;
+// ---------- HUD ----------
 
-// ---------- Puntuación y vidas ----------
-int cantidadVidas = 3;
-int Puntos = 0;
-float radioChoque = 70;
 int FrameActualC = 0;
+
 float Xinicial = 100;
 float Y = 70;
 float distanciaC = 50;
+
 PImage[] FramesC = new PImage[8];
 
 // ---------- Historia ----------
+
 String[] historia = {
   "EPISODIO I: ",
   "Año 3077. La humanidad ha construido una red de comunicación interplanetaria conocida como The Network.",
@@ -84,6 +111,7 @@ String[] historia = {
   "Porque en esta guerra, no todas las señales merecen una respuesta, y no intervenir",
   "también puede tener consecuencias."
 };
+
 float interlineado = 50;
 float scroll = 0;
 float velScroll = 1.5;
@@ -92,10 +120,12 @@ float tamañoT = 30;
 float tramo = 0.8;
 float escalaMin = 0.3;
 float desvanece = 0.25;
+
 PFont fuenteHistoria;
 PGraphics capaTexto;
 
 // ---------- Audio ----------
+
 SoundFile sfxLaserShoot;
 SoundFile sfxExplosion;
 SoundFile sfxVictory;
