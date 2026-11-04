@@ -1,0 +1,103 @@
+// ---------- Estado general ----------
+float pantalla = 1;  // 1: menú, 1.5: historia, 2: juego, 3: instrucciones, 4: ajustes, 5: créditos
+boolean juegoPausado = false;
+boolean juegoGanado = false;
+boolean victoriaSonada = false;
+boolean gameOver = false;
+
+// ---------- Ajustes ----------
+int dificultad = 2;       // 1: fácil, 2: normal, 3: difícil
+int velocidadNave = 6;    // 3: lenta, 6: normal, 9: rápida
+
+// ---------- Interfaz ----------
+PFont fuenteBoton;
+Pantallas GestorPantallas;
+Boton[] botonesMenu = new Boton[4];
+float radioEsquinas = 50;
+
+// ---------- Recursos gráficos ----------
+PImage tituloMenu;
+PImage fondo;
+PImage[] estrellas = new PImage[8];
+PImage corazones;
+PImage Nave_jugador;
+PImage naveRoja;
+PImage naveVerde;
+PImage naveGris;
+
+// ---------- Fondo animado ----------
+float velocidadFondo = 5;
+float fondoY = -velocidadFondo;
+int Frame_estrellas = 0;
+int Velocidad_titileo = 7;
+
+// ---------- Naves y enemigos ----------
+int maxEnemigos = 27;
+Naves jugador;
+Naves[] enemigo = new Naves[maxEnemigos];
+boolean[] existe = new boolean[maxEnemigos];
+int[] direccionEnemigo = {1, -1, 1};
+float velocidadEnemigo;
+
+// ---------- Disparos ----------
+boolean arriba;
+boolean izquierda;
+boolean abajo;
+boolean derecha;
+boolean espacio = false;
+int maxDisparos = 4;
+float[] disparosX = new float[maxDisparos];
+float[] disparosY = new float[maxDisparos];
+float velocidadDisparos = 20;
+boolean[] balaActiva = new boolean[maxDisparos];
+int ultimoDisparo = 0;
+int inicioCooldown = 0;
+int duracionCooldown = 0;
+int aliadosCaidos = 0;
+
+// ---------- Puntuación y vidas ----------
+int cantidadVidas = 3;
+int Puntos = 0;
+float radioChoque = 70;
+int FrameActualC = 0;
+float Xinicial = 100;
+float Y = 70;
+float distanciaC = 50;
+PImage[] FramesC = new PImage[8];
+
+// ---------- Historia ----------
+String[] historia = {
+  "EPISODIO I: ",
+  "Año 3077. La humanidad ha construido una red de comunicación interplanetaria conocida como The Network.",
+  "Millones de personas la utilizan diariamente para compartir ideas, construir comunidades",
+  "y mantenerse conectadas sin importar la distancia.",
+  "Sin embargo, la red comienza a presentar una anomalía:",
+  "señales hostiles, mensajes manipuladores y ataques coordinados se propagan a una velocidad alarmante.",
+  "Poco a poco, las comunicaciones se convierten en un espacio donde la agresión se normaliza,",
+  "mientras quienes la presencian comienzan a ignorarla.",
+  "La estación central pierde el control de sus sistemas de comunicación.",
+  "Si nadie interviene, el ruido terminará silenciando las voces que realmente importan.",
+  "Tú eres el piloto de la última unidad de defensa digital: BYTE-01.",
+  "Tu misión no consiste simplemente en destruir señales enemigas.",
+  "Debes aprender a distinguir entre mensajes dañinos, comunicaciones positivas y señales neutrales;",
+  "intervenir cuando sea necesario y proteger el bienestar de la comunidad digital.",
+  "Porque en esta guerra, no todas las señales merecen una respuesta, y no intervenir",
+  "también puede tener consecuencias."
+};
+float interlineado = 50;
+float scroll = 0;
+float velScroll = 1.5;
+float salida = 100;
+float tamañoT = 30;
+float tramo = 0.8;
+float escalaMin = 0.3;
+float desvanece = 0.25;
+PFont fuenteHistoria;
+PGraphics capaTexto;
+
+// ---------- Audio ----------
+SoundFile sfxLaserShoot;
+SoundFile sfxExplosion;
+SoundFile sfxVictory;
+SoundFile musicaJuego;
+SoundFile musicaMenu;
