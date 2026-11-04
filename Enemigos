@@ -1,0 +1,60 @@
+void crearEnemigos() {
+  int k = 0;
+  int tipoNave;
+  PImage imagenNave;
+
+  for (int i = 0; i < 3; i++) {
+    for (int j = 0; j < 9; j++) {
+      tipoNave = int(random(1, 4));
+      if (tipoNave == 1) imagenNave = naveRoja;
+      else if (tipoNave == 2) imagenNave = naveVerde;
+      else imagenNave = naveGris;
+
+      float enemigoX = width / 2 - 4 * 128 + j * 128;
+      float enemigoY = 64 + i * 128;
+      enemigo[k] = new Naves(imagenNave, tipoNave, enemigoX, enemigoY);
+      existe[k] = true;
+      k++;
+    }
+  }
+}
+
+void moverEnemigos() {
+  if (juegoPausado) return;
+
+  if (dificultad == 1) velocidadEnemigo = 6;
+  else if (dificultad == 2) velocidadEnemigo = 9;
+  else velocidadEnemigo = 12;
+
+  float minX = 64;
+  float maxX = width - 64;
+
+  // Cambia la dirección de cada fila cuando alcanza un extremo.
+  for (int i = 0; i < maxEnemigos; i++) {
+    int fila = i / 9;
+    if (existe[i]) {
+      if (direccionEnemigo[fila] == -1 && enemigo[i].x <= minX) {
+        direccionEnemigo[fila] = 1;
+      } else if (direccionEnemigo[fila] == 1 && enemigo[i].x >= maxX) {
+        direccionEnemigo[fila] = -1;
+      }
+    }
+  }
+
+  for (int i = 0; i < maxEnemigos; i++) {
+    int fila = i / 9;
+    if (existe[i]) enemigo[i].x += velocidadEnemigo * direccionEnemigo[fila];
+  }
+}
+
+int nahIdWin(int i, int t) {
+  int gojoWon = 1;
+  if (i < t) {
+    if (existe[i] && enemigo[i].tipo == 1) {
+      gojoWon = 0;
+    } else {
+      gojoWon = nahIdWin(i + 1, t);
+    }
+  }
+  return gojoWon;
+}
