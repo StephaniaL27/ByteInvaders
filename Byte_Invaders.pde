@@ -1,5 +1,11 @@
 import processing.sound.*;
 
+// ---------- Contadores globales ----------
+
+int i = 0;
+int j = 0;
+int k = 0;
+
 void setup() {
   fullScreen();
   imageMode(CENTER);
@@ -8,6 +14,7 @@ void setup() {
   frameRate(60);
 
   cargarImagenes();
+  cargarFramesNaves();
   cargarSonidos();
   cargarFramesVidas();
 
@@ -17,85 +24,33 @@ void setup() {
   capaTexto.smooth(3);
   textFont(fuenteBoton);
 
-  GestorPantallas = new Pantallas();
-  jugador = new Naves(Nave_jugador, 0, width / 2, height + 64);
-  crearEnemigos();
-  crearBotonesMenu();
+  crearTextos();
+  crearBotones();
+  crearPantallas();
 
-  musicaMenu.loop();
-  musicaMenu.amp(0.5);
+  jugador = new Naves(0, width / 2, height + 64);
+  crearEnemigos();
 }
 
 void draw() {
   actualizarFondo();
   dibujarFondo(fondoY);
+  controlarMusica();
 
   if (pantalla == 1) {
-    aparienciaMenu();
+    image(tituloMenu, width/2, height * 0.25, 1100, 300);
+    for (i = 0; i < botonesMenu.length; i++) {
+      botonesMenu[i].dibujarBoton();
+    }
   } else if (pantalla == 1.5) {
     dibujarHistoria();
   } else if (pantalla == 2) {
     dibujarJuego();
   } else if (pantalla == 3) {
-    GestorPantallas.DibujarHowToPlay();
+    DibujarHowToPlay();
   } else if (pantalla == 4) {
-    GestorPantallas.dibujarConfiguracion();
+    dibujarConfiguracion();
   } else {
-    GestorPantallas.dibujarCreditos();
+    dibujarCreditos();
   }
-}
-
-void actualizarFondo() {
-  if (pantalla == 2 && !juegoPausado && !juegoGanado && !gameOver) {
-    fondoY += velocidadFondo;
-    if (fondoY >= height) {
-      fondoY -= height;
-    }
-  } else if (pantalla != 2) {
-    fondoY = height / 2;
-  }
-}
-
-void reiniciarPartida() {
-  juegoGanado = false;
-  victoriaSonada = false;
-  gameOver = false;
-  juegoPausado = false;
-  jugador.x = width / 2;
-  jugador.y = height - 100;
-
-  for (int i = 0; i < maxDisparos; i++) {
-    balaActiva[i] = false;
-  }
-  ultimoDisparo = 0;
-  inicioCooldown = 0;
-  duracionCooldown = 0;
-  espacio = false;
-  arriba = false;
-  abajo = false;
-  izquierda = false;
-  derecha = false;
-
-  direccionEnemigo[0] = 1;
-  direccionEnemigo[1] = -1;
-  direccionEnemigo[2] = 1;
-  crearEnemigos();
-
-  cantidadVidas = 3;
-  Puntos = 0;
-  aliadosCaidos = 0;
-  scroll = 0;
-}
-
-boolean sobreRect(float cx, float cy, float w, float h) {
-  return mouseX >= cx - w / 2 && mouseX <= cx + w / 2 &&
-    mouseY >= cy - h / 2 && mouseY <= cy + h / 2;
-}
-
-void volverAlMenu() {
-  musicaJuego.stop();
-  musicaMenu.loop();
-  musicaMenu.amp(0.5);
-  juegoPausado = false;
-  pantalla = 1;
 }
