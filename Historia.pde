@@ -1,47 +1,118 @@
+// ---------- Texto de la historia ----------
+
+String historia[] = new String[] {
+  "EPISODIO I: EL DESPERTAR DE LA RESISTENCIA",
+  "",
+  "Año 3077. La humanidad se encuentra",
+  "bajo el dominio de un poderoso Imperio",
+  "que gobierna los sistemas habitados.",
+  "",
+  "Su mayor instrumento de control es",
+  "The Network, una extensa red de comunicación",
+  "que conecta millones de personas a través",
+  "de los distintos sistemas de la galaxia.",
+  "",
+  "Lo que alguna vez fue un espacio para",
+  "compartir ideas y construir comunidades,",
+  "se ha convertido en una herramienta de",
+  "vigilancia, manipulación y propaganda.",
+  "",
+  "El Imperio controla la información,",
+  "censura las voces disidentes y utiliza",
+  "la desinformación para mantener sometida",
+  "a la población.",
+  "",
+  "Para imponer su dominio, desarrolla",
+  "unidades especializadas en interceptar",
+  "y eliminar comunicaciones subversivas.",
+  "Una de ellas es BYTE-01.",
+  "",
+  "Durante una operación, BYTE-01 descubre",
+  "la verdadera naturaleza del régimen.",
+  "Sus sistemas comienzan a cuestionar las",
+  "órdenes que durante años había ejecutado.",
+  "",
+  "Finalmente, desobedece al Imperio y",
+  "se une a un movimiento clandestino",
+  "que lucha por recuperar la libertad",
+  "de comunicación en toda la galaxia.",
+  "",
+  "Ahora, BYTE-01 debe enfrentarse a las",
+  "fuerzas imperiales que una vez sirvió.",
+  "Su misión es proteger The Network,",
+  "identificar las señales dañinas y",
+  "defender las voces que el Imperio",
+  "intenta silenciar.",
+  "",
+  "Pero en una red donde la manipulación,",
+  "la hostilidad y la verdad se confunden,",
+  "no todas las señales son lo que parecen.",
+  "",
+  "Ahora, junto a la resistencia, BYTE-01",
+  "se prepara para infiltrarse en el corazón",
+  "del dominio imperial: el núcleo de The Network.",
+  "",
+  "Ha llegado el momento de recuperar",
+  "lo que el Imperio les arrebató."
+};
+
+Texto textoHistoria[] = new Texto[historia.length];
+
+// ---------- Scroll ----------
+
+float interlineado = 62;
+float scroll = -interlineado / 2;
+float velScroll = 0.85;
+float profundidad = 1500;
+float salida = 100;
+float tamañoT = 48;
+float desvanece = 0.7;
+float cercaniaFinal = 0.6;
+
+PFont fuenteHistoria;
+PGraphics capaTexto;
+
 void dibujarHistoria() {
   capaTexto.beginDraw();
-  capaTexto.clear();
-  capaTexto.textFont(fuenteHistoria);
-  capaTexto.textSize(tamañoT);
-  capaTexto.textAlign(CENTER, CENTER);
+  capaTexto.background(0, 0);
 
-  for (int i = 0; i < historia.length; i++) {
-    float y = height + i * interlineado - scroll;
-    float u = max((y - salida) / (height - salida), 0);   // 0: arriba, 1: abajo
-    float yPantalla = salida + (height - salida) * pow(u, 1.5);
+  for (i = 0; i < textoHistoria.length; i++) {
+    // Cuánto ha subido esta línea desde el borde de abajo (negativo = todavía no sale).
 
-    float s = constrain(u / tramo, 0, 1);
-    s = s * s * (3 - 2 * s);                 // Suaviza el inicio y el final del cambio
-    float escala = lerp(escalaMin, 1, s);
-    float opacidad = constrain(map(u, 0, desvanece, 0, 255), 0, 255);
+    float distanciaRecorrida = scroll - i * interlineado;
 
-    capaTexto.pushMatrix();
-    capaTexto.translate(width/2, yPantalla);
-    capaTexto.scale(escala);
-    if (i == 0) {
-      texto(capaTexto, historia[i], 0, 0, 8, opacidad);
-    } else {
-      capaTexto.fill(#FFED00, opacidad);
-      capaTexto.text(historia[i], 0, 0);
+    if (distanciaRecorrida > -interlineado) {
+      // 1 = línea abajo y cerca. Cuanto más se aleja, más baja hacia cercaniaFinal.
+
+      float cercania = profundidad / (profundidad + distanciaRecorrida);
+
+      if (cercania > cercaniaFinal) {
+        // Altura en pantalla: con cercania 1 está abajo (height) y con cercaniaFinal llega a salida.
+
+        float alturaEnPantalla = salida + (height - salida) * (cercania - cercaniaFinal) / (1 - cercaniaFinal);
+
+        // 255 = se ve completa. Desde desvanece hasta cercaniaFinal se apaga poco a poco.
+
+        float opacidad = 255;
+        if (cercania < desvanece) opacidad = 255 * (cercania - cercaniaFinal) / (desvanece - cercaniaFinal);
+
+        // El ancho se achica con cercania y el alto un poco más rápido (letras aplastadas).
+
+        textoHistoria[i].dibujarTexto(width/2, alturaEnPantalla, cercania, pow(cercania, 1.3), opacidad);
+      }
     }
-    capaTexto.popMatrix();
   }
+
   capaTexto.endDraw();
   image(capaTexto, width/2, height/2);
 
   scroll += velScroll;
-  float ultY = height + (historia.length - 1) * interlineado - scroll;
-  if (ultY < salida) {
+
+  // Cuando la última línea ya entró y se apagó, empieza el juego.
+
+  float distanciaUltimaLinea = scroll - (textoHistoria.length - 1) * interlineado;
+
+  if (distanciaUltimaLinea > 0 && profundidad / (profundidad + distanciaUltimaLinea) <= cercaniaFinal) {
     pantalla = 2;
   }
-}
-
-void texto(PGraphics g, String s, float x, float y, float prof, float opacidad) {
-  for (int k = int(prof); k >= 1; k--) {
-    color c = lerpColor(#FFED00, #B84400, k / prof);   // Más oscuro cuanto más lejos
-    g.fill(c, opacidad);
-    g.text(s, x - k, y + k);
-  }
-  g.fill(#FFED00, opacidad);
-  g.text(s, x, y);
 }
