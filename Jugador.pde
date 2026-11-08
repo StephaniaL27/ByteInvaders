@@ -1,6 +1,24 @@
+// ---------- Jugador ----------
+
+Naves jugador;
+int velocidadNave = 6;
+
+// ---------- Disparos ----------
+
+int maxDisparos = 4;
+int ultimoDisparo = 0;
+int inicioCooldown = 0;
+int duracionCooldown = 0;
+
+float[] disparosX = new float[maxDisparos];
+float[] disparosY = new float[maxDisparos];
+float velocidadDisparos = 20;
+
+boolean[] balaActiva = new boolean[maxDisparos];
+
 void disparar() {
   boolean puedeDisparar = true;
-  int i = 0;
+  i = 0;
 
   while (i < maxDisparos && puedeDisparar) {
     if (balaActiva[i] && disparosY[i] > jugador.y - 300) {
@@ -28,20 +46,23 @@ void disparar() {
 }
 
 void dibujarDisparos() {
-  for (int i = 0; i < maxDisparos; i++) {
+  for (i = 0; i < maxDisparos; i++) {
     if (balaActiva[i]) {
+      stroke(#80C0FF);
+      strokeWeight(2);
       fill(#4080D2);
       rect(disparosX[i], disparosY[i], 5, 20);
-      disparosY[i] -= velocidadDisparos;
+      if (!juegoPausado) {
+        disparosY[i] -= velocidadDisparos;
+      }
     }
     if (disparosY[i] < 0) balaActiva[i] = false;
   }
 }
 
 void derribarEnemigo() {
-  int i = 0;
-  int j;
   boolean impacto = false;
+  i = 0;
 
   while (i < maxDisparos && !impacto) {
     if (balaActiva[i]) {
@@ -55,10 +76,7 @@ void derribarEnemigo() {
           } else if (enemigo[j].tipo == 2) {
             if (Puntos >= 100) Puntos -= 100;
             aliadosCaidos++;
-            if (aliadosCaidos == 2) {
-              perderVida();
-              aliadosCaidos = 0;
-            }
+            if (aliadosCaidos % 2 == 0) perderVida();
           }
           existe[j] = false;
           balaActiva[i] = false;
@@ -77,8 +95,8 @@ void moverJugador() {
   if (abajo) jugador.y += velocidadNave;
   if (derecha) jugador.x += velocidadNave;
 
-  if (jugador.y <= 64) jugador.y = 64;
-  if (jugador.x <= 64) jugador.x = 64;
-  if (jugador.y >= height - 64) jugador.y = height - 64;
-  if (jugador.x >= width - 64) jugador.x = width - 64;
+  if (jugador.y < 64) jugador.y = 64;
+  if (jugador.y > height - 64) jugador.y = height - 64;
+  if (jugador.x < 64) jugador.x = 64;
+  if (jugador.x > width - 64) jugador.x = width - 64;
 }
