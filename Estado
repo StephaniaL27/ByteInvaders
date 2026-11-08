@@ -1,0 +1,62 @@
+// ---------- Estado general ----------
+
+float pantalla = 1;
+int dificultad = 2;
+
+boolean juegoPausado = false;
+boolean juegoGanado = false;
+boolean gameOver = false;
+
+// Transiciones y reinicio del estado de la partida
+
+void reiniciarPartida() {
+  juegoGanado = false;
+  gameOver = false;
+  juegoPausado = false;
+
+  jugador.x = width / 2;
+  jugador.y = height - 100;
+  jugador.FrameActual = 0;
+
+  for (i = 0; i < maxDisparos; i++) {
+    balaActiva[i] = false;
+    disparosX[i] = 0;
+    disparosY[i] = 0;
+  }
+
+  ultimoDisparo = 0;
+  inicioCooldown = 0;
+  duracionCooldown = 0;
+  espacio = false;
+  arriba = false;
+  abajo = false;
+  izquierda = false;
+  derecha = false;
+
+  for (i = 0; i < direccionEnemigo.length; i++) {
+    if (i % 2 == 0) direccionEnemigo[i] = 1;
+    else direccionEnemigo[i] = -1;
+  }
+
+  crearEnemigos();
+
+  if (dificultad == 1) velocidadEnemigo = 6;
+  else if (dificultad == 2) velocidadEnemigo = 9;
+  else velocidadEnemigo = 12;
+
+  cantidadVidas = 3;
+  Puntos = 0;
+  aliadosCaidos = 0;
+  FrameActualC = 0;
+  scroll = -interlineado / 2;
+}
+
+void volverAlMenu() {
+  juegoPausado = false;
+  espacio = false;
+  arriba = false;
+  abajo = false;
+  izquierda = false;
+  derecha = false;
+  pantalla = 1;
+}
