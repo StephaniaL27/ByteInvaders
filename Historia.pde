@@ -56,16 +56,14 @@ String historia[] = new String[] {
   "lo que el Imperio les arrebató."
 };
 
-Texto textoHistoria[] = new Texto[historia.length];
-
 // ---------- Scroll ----------
 
-float interlineado = 62;
+float interlineado = 60;
 float scroll = -interlineado / 2;
 float velScroll = 0.85;
 float profundidad = 1500;
 float salida = 100;
-float tamañoT = 48;
+float tamañoT = 50;
 float desvanece = 0.7;
 float cercaniaFinal = 0.6;
 
@@ -75,44 +73,31 @@ PGraphics capaTexto;
 void dibujarHistoria() {
   capaTexto.beginDraw();
   capaTexto.background(0, 0);
-
   for (i = 0; i < textoHistoria.length; i++) {
     // Cuánto ha subido esta línea desde el borde de abajo (negativo = todavía no sale).
-
     float distanciaRecorrida = scroll - i * interlineado;
-
     if (distanciaRecorrida > -interlineado) {
       // 1 = línea abajo y cerca. Cuanto más se aleja, más baja hacia cercaniaFinal.
-
       float cercania = profundidad / (profundidad + distanciaRecorrida);
-
       if (cercania > cercaniaFinal) {
         // Altura en pantalla: con cercania 1 está abajo (height) y con cercaniaFinal llega a salida.
-
         float alturaEnPantalla = salida + (height - salida) * (cercania - cercaniaFinal) / (1 - cercaniaFinal);
-
         // 255 = se ve completa. Desde desvanece hasta cercaniaFinal se apaga poco a poco.
-
         float opacidad = 255;
-        if (cercania < desvanece) opacidad = 255 * (cercania - cercaniaFinal) / (desvanece - cercaniaFinal);
-
+        if (cercania < desvanece) {
+          opacidad = 255 * (cercania - cercaniaFinal) / (desvanece - cercaniaFinal);
+        }
         // El ancho se achica con cercania y el alto un poco más rápido (letras aplastadas).
-
-        textoHistoria[i].dibujarTexto(width/2, alturaEnPantalla, cercania, pow(cercania, 1.3), opacidad);
+        textoHistoria[i].dibujarTexto(width / 2, alturaEnPantalla, cercania, pow(cercania, 1.3), opacidad);
       }
     }
   }
-
   capaTexto.endDraw();
-  image(capaTexto, width/2, height/2);
-
+  image(capaTexto, width / 2, height / 2);
   scroll += velScroll;
-
   // Cuando la última línea ya entró y se apagó, empieza el juego.
-
   float distanciaUltimaLinea = scroll - (textoHistoria.length - 1) * interlineado;
-
   if (distanciaUltimaLinea > 0 && profundidad / (profundidad + distanciaUltimaLinea) <= cercaniaFinal) {
-    pantalla = 2;
+    pantalla = 1.2;
   }
 }
