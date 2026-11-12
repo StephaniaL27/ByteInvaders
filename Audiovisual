@@ -13,7 +13,6 @@ PImage naveGris;
 
 int Frame_estrellas = 0;
 int FPS = 6;
-
 float velocidadFondo = 5;
 float fondoY = -velocidadFondo;
 
@@ -24,7 +23,6 @@ SoundFile sfxExplosion;
 SoundFile sfxVictory;
 SoundFile musicaJuego;
 SoundFile musicaMenu;
-
 boolean musicaJuegoPausada;
 
 // Carga y presentación de recursos audiovisuales
@@ -37,18 +35,13 @@ void cargarImagenes() {
   naveVerde = loadImage("nave_verde.png");
   naveGris = loadImage("nave_npc.png");
   fondo = loadImage("fondo_loop_1920x1080.png");
-
   for (i = 0; i < estrellas.length; i++) {
     estrellas[i] = loadImage("estrellas_" + i + ".png");
   }
 }
 
-// Los frames se recortan una sola vez y se comparten entre las naves
-// del mismo tipo, en lugar de volver a copiarlos por cada enemigo.
-
 void cargarFramesNaves() {
-  PImage[] imagenes = {Nave_jugador, naveRoja, naveVerde, naveGris};
-
+  PImage[] imagenes = {Nave_jugador, naveVerde, naveGris, naveRoja};
   for (j = 0; j < imagenes.length; j++) {
     for (i = 0; i < framesNaves[j].length; i++) {
       framesNaves[j][i] = imagenes[j].get(i * 64, 0, 64, 64);
@@ -71,21 +64,21 @@ void cargarFramesVidas() {
 }
 
 void actualizarFondo() {
-  if (pantalla != 2) {
+  if (pantalla != 1.2) {
     fondoY = height / 2;
   } else if (!juegoPausado && !juegoGanado && !gameOver) {
     fondoY += velocidadFondo;
-    if (fondoY >= height) fondoY -= height;
+    if (fondoY >= height) {
+      fondoY -= height;
+    }
   }
 }
 
 void dibujarFondo(float desplazamiento) {
   imageMode(CORNER);
-
   if (!juegoPausado && frameCount % FPS == 0) {
     Frame_estrellas = (Frame_estrellas + 1) % estrellas.length;
   }
-
   image(fondo, 0, int(desplazamiento), width, height);
   image(fondo, 0, int(desplazamiento) - height, width, height);
   image(estrellas[Frame_estrellas], 0, int(desplazamiento), width, height);
@@ -94,18 +87,16 @@ void dibujarFondo(float desplazamiento) {
 }
 
 void controlarMusica() {
-  if (pantalla == 1 || pantalla == 3 || pantalla == 4 || pantalla == 5) {
+  if (pantalla == 0 || pantalla > 1.2) {
     sfxVictory.stop();
     musicaJuego.stop();
     musicaJuegoPausada = false;
-
     if (!musicaMenu.isPlaying()) {
       musicaMenu.loop();
       musicaMenu.amp(0.5);
     }
-  } else if (pantalla == 1.5 || pantalla == 2) {
+  } else {
     musicaMenu.stop();
-
     if (juegoGanado || gameOver) {
       musicaJuego.stop();
       musicaJuegoPausada = false;
