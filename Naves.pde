@@ -2,17 +2,28 @@
 
 PImage[][] framesNaves = new PImage[4][8];
 
-class Naves {
-  int FrameActual = 0;
-  PImage[] Frames;
-  int tipo;  // 0: jugador, 1: enemigo rojo, 2: aliado verde, 3: distracción gris
+class Nave {
   float x, y;
+  float v;
+  int tipo;  // 0: jugador, 1: aliado verde, 2: distracción gris, 3: enemigo rojo
+  float hiddenValue;
+  PImage[] Frames;
+  int FrameActual = 0;
+  float vidas;
+  float damage;
+  float cooldown, inicioCooldown;
 
-  Naves(int nTipo, float nx, float ny) {
-    Frames = framesNaves[nTipo];
-    tipo = nTipo;
-    x = nx;
-    y = ny;
+  Nave(float x, float y, float v, int tipo, float hiddenValue, float vidas, float damage, float cooldown, float inicioCooldown) {
+    this.x = x;
+    this.y = y;
+    this.v = v;
+    this.tipo = tipo;
+    this.hiddenValue = hiddenValue;
+    Frames = framesNaves[tipo];
+    this.vidas = vidas;
+    this.damage = damage;
+    this.cooldown = cooldown;
+    this.inicioCooldown = inicioCooldown;
   }
 
   void dibujarNave() {
