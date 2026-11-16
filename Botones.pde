@@ -1,20 +1,19 @@
-// ---------- Interfaz de botones ----------
+ // ---------- Interfaz de botones ----------
 
-float radioEsquinas = 50;
 String[] opcionesMenu = {"START GAME", "HOW TO PLAY", "SETTINGS", "CREDITS"};
 String[] opcionesDificultad = {"FÁCIL", "NORMAL", "DIFÍCIL"};
-String[] opcionesVelocidad = {"LENTA", "NORMAL", "RÁPIDA"};
-Boton[] botonesMenu = new Boton[opcionesMenu.length];
-Boton[] botonesDificultad = new Boton[opcionesDificultad.length];
-Boton[] botonesVelocidad = new Boton[opcionesVelocidad.length];
-Boton botonPause;
-Boton botonContinue;
-Boton botonHome;
-Boton botonBack;
+Boton[] botonMenu = new Boton[opcionesMenu.length];
+Boton[] botonDificultad = new Boton[opcionesDificultad.length];
+Boton[] controlVolumen = new Boton[2];
+Boton botonPausa;
+Boton botonContinuar;
+Boton botonInicio;
+Boton botonVolver;
 Boton botonHistoria;
 Boton botonSi;
 Boton botonNo;
 PFont fuenteBoton;
+
 boolean estaDentroRectangulo(float x, float y, float w, float h) {
   return mouseX >= x - w / 2 && mouseX <= x + w / 2 && mouseY >= y - h / 2 && mouseY <= y + h / 2;
 }
@@ -49,44 +48,36 @@ class Boton {
     nivelBrillo = cursorEncima ? min(nivelBrillo + velocidadBrillo, 255) : max(nivelBrillo - velocidadBrillo, 0);
     stroke(seleccionado ? #00FFFF : colorPrincipal);
     strokeWeight(cursorEncima || seleccionado ? 3 : 2);
-    fill(base);
-    rect(x, y, w, h, radio);
     if (seleccionado) {
       fill(#00FFFF, 100);
-      rect(x, y, w, h, radio);
-    }
-    if (nivelBrillo > 0) {
-      fill(colorPrincipal, nivelBrillo);
-      rect(x, y, w, h, radio);
-    }
-    if (nivelBrillo > 127) {
-      fill(0);
-    } else if (seleccionado) {
-      fill(#00FFFF);
+    } else if (nivelBrillo > 0) {
+      fill(colorPrincipal, 60);
     } else {
-      fill(cadena);
+      noFill();
     }
+    rect(x, y, w, h, radio);
+    fill(seleccionado ? #00FFFF : cadena);
     text(contenido, x, y);
   }
 }
 
 void crearBotones() {
-  float[] posicionesX = {width / 2 - 80, width / 2 + 35, width / 2 + 160};
-  float[] anchos = {100, 110, 110};
-  for (i = 0; i < opcionesMenu.length; i++) {
-    botonesMenu[i] = new Boton(width / 2, 480 + i * 80, 400, 50, opcionesMenu[i], #FFED00, color(0, 0), #FFED00, 42, radioEsquinas);
-  }
-  for (i = 0; i < 3; i++) {
-    botonesDificultad[i] = new Boton(posicionesX[i], height / 2 - 80, anchos[i], 38, opcionesDificultad[i], #00FFFF, color(20, 25, 45), color(200), 16, 8);
-    botonesVelocidad[i] = new Boton(posicionesX[i], height / 2, anchos[i], 38, opcionesVelocidad[i], #00FFFF, color(20, 25, 45), color(200), 16, 8);
-  }
-  botonesDificultad[1].seleccionado = true;
-  botonesVelocidad[1].seleccionado = true;
-  botonPause = new Boton(width - 70, 45, 90, 40, "|| PAUSE", #00FFFF, color(10, 15, 30, 200), #00FFFF, 18, 10);
-  botonContinue = new Boton(width / 2, height / 2 + 5, 200, 44, "CONTINUE", #00FF66, color(10, 30, 20, 200), #00FF66, 20, 10);
-  botonHome = new Boton(width / 2, height / 2 + 65, 200, 44, "HOME", #FF4444, color(30, 10, 10, 200), #FF4444, 20, 10);
-  botonBack = new Boton(width / 2, height - 100, 160, 50, "BACK", #FF4000, #0F0F0B, #FFFFFF, 24, 12);
-  botonHistoria = new Boton(width / 2 - 30, height / 2 + 80, 160, 38, "HISTORIA", #FF7700, color(255, 119, 0, 80), #FF7700, 16, 10);
-  botonSi = new Boton(width / 2 - 50, height / 2 + 150, 80, 60, "SÍ", #FFED00, #0F0F0B, #FFFFFF, 24, 10);
-  botonNo = new Boton(width / 2 + 50, height / 2 + 150, 80, 60, "NO", #FFED00, #0F0F0B, #FFFFFF, 24, 10);
+  botonMenu[0] = new Boton(width / 2, height / 2, escalar(500), escalar(60), opcionesMenu[0], #FFED00, color(0, 0), #FFED00, escalar(50), escalar(60));
+  botonMenu[1] = new Boton(width / 2, height / 2 + escalar(90), escalar(500), escalar(60), opcionesMenu[1], #FFED00, color(0, 0), #FFED00, escalar(50), escalar(60));
+  botonMenu[2] = new Boton(width / 2, height / 2 + escalar(180), escalar(500), escalar(60), opcionesMenu[2], #FFED00, color(0, 0), #FFED00, escalar(50), escalar(60));
+  botonMenu[3] = new Boton(width / 2, height / 2 + escalar(270), escalar(500), escalar(60), opcionesMenu[3], #FFED00, color(0, 0), #FFED00, escalar(50), escalar(60));
+  botonDificultad[0] = new Boton(width / 2 - escalar(265), height / 2 - escalar(60), escalar(250), escalar(45), opcionesDificultad[0], #00FFFF, color(20, 25, 45), color(200), escalar(35), escalar(45));
+  botonDificultad[1] = new Boton(width / 2, height / 2 - escalar(60), escalar(250), escalar(45), opcionesDificultad[1], #00FFFF, color(20, 25, 45), color(200), escalar(35), escalar(45));
+  botonDificultad[2] = new Boton(width / 2 + escalar(265), height / 2 - escalar(60), escalar(250), escalar(45), opcionesDificultad[2], #00FFFF, color(20, 25, 45), color(200), escalar(35), escalar(45));
+  botonDificultad[1].seleccionado = true;
+  controlVolumen[0] = new Boton(width / 2 + escalar(390), height / 2 + escalar(20), escalar(25), escalar(25), "", #00FFFF, color(20, 25, 45), color(200), escalar(25), escalar(25));
+  controlVolumen[1] = new Boton(width / 2 + escalar(390), height / 2 + escalar(100), escalar(25), escalar(25), "", #00FFFF, color(20, 25, 45), color(200), escalar(25), escalar(25));
+  botonPausa = new Boton(width / 2 - escalar(570), height / 2 + escalar(480), escalar(60), escalar(60), "||", #00FFFF, color(10, 15, 30, 200), #00FFFF, escalar(50), escalar(60));
+  botonContinuar = new Boton(width / 2, height / 2, escalar(250), escalar(45), "CONTINUE", #00FF66, color(10, 30, 20, 200), #00FF66, escalar(35), escalar(45));
+  botonInicio = new Boton(width / 2, height / 2 + escalar(75), escalar(250), escalar(45), "HOME", #FF4444, color(30, 10, 10, 200), #FF4444, escalar(35), escalar(45));
+  botonVolver = new Boton(width / 2, height / 2 + escalar(450), escalar(250), escalar(45), "BACK", #FF4000, #0F0F0B, #FFFFFF, escalar(35), escalar(45));
+  botonHistoria = new Boton(width / 2, height / 2 + escalar(180), escalar(250), escalar(45), "HISTORIA", #FF7700, color(255, 119, 0, 80), #FF7700, escalar(35), escalar(45));
+  botonHistoria.seleccionado = true;
+  botonSi = new Boton(width / 2 - escalar(90), height / 2 + escalar(100), escalar(150), escalar(40), "SÍ", #FFED00, #0F0F0B, #FFFFFF, escalar(25), escalar(40));
+  botonNo = new Boton(width / 2 + escalar(90), height / 2 + escalar(100), escalar(150), escalar(40), "NO", #FFED00, #0F0F0B, #FFFFFF, escalar(25), escalar(40));
 }
