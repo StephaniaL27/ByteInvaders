@@ -1,56 +1,70 @@
-void howToPlay() {
-  panelHTP.dibujarPanel();
-  for (i = 0; i < textoHTP.length; i++) {
-    textoHTP[i].dibujarTexto();
+void dibujarInstrucciones() {
+  recuadroInstrucciones.dibujarRecuadro();
+  for (i = 0; i < textoInstrucciones.length; i++) {
+    textoInstrucciones[i].dibujarTexto();
   }
-  botonBack.dibujarBoton();
+  botonVolver.dibujarBoton();
 }
 
-void Settings() {
-  panelSettings.dibujarPanel();
-  for (i = 0; i < textoSettings.length; i++) {
-    textoSettings[i].dibujarTexto();
+void dibujarAjustes() {
+  for (i = 0; i < recuadroAjustes.length; i++) {
+    recuadroAjustes[i].dibujarRecuadro();
   }
-  for (i = 0; i < botonesDificultad.length; i++) {
-    botonesDificultad[i].dibujarBoton();
+  textoAjustes[5].contenido = str(int(volumen[0] * 100)) + "%";
+  textoAjustes[7].contenido = str(int(volumen[1] * 100)) + "%";
+  for (i = 0; i < textoAjustes.length; i++) {
+    textoAjustes[i].dibujarTexto();
   }
-  for (i = 0; i < botonesVelocidad.length; i++) {
-    botonesVelocidad[i].dibujarBoton();
+  for (i = 0; i < botonDificultad.length; i++) {
+    botonDificultad[i].dibujarBoton();
+  }
+  for (i = 0; i < controlVolumen.length; i++) {
+    controlVolumen[i].dibujarBoton();
   }
   botonHistoria.dibujarBoton();
-  botonBack.dibujarBoton();
+  botonVolver.dibujarBoton();
 }
 
-void Credits() {
-  panelCredits.dibujarPanel();
-  for (i = 0; i < textoCredits.length; i++) {
-    textoCredits[i].dibujarTexto();
+void dibujarCreditos() {
+  recuadroCreditos.dibujarRecuadro();
+  for (i = 0; i < textoCreditos.length; i++) {
+    textoCreditos[i].dibujarTexto();
   }
-  botonBack.dibujarBoton();
+  botonVolver.dibujarBoton();
 }
 
-void gamePaused() {
-  fill(0, 180);
-  rect(width / 2, height / 2, width, height);
-  panelGamePaused.dibujarPanel();
-  textoGamePaused.dibujarTexto();
-  botonContinue.dibujarBoton();
-  botonHome.dibujarBoton();
-}
-
-void EquilibrioRestaurado() {
-  panelEquilibrioRestaurado.dibujarPanel();
-  for (i = 0; i < textoEquilibrioRestaurado.length; i++) {
-    textoEquilibrioRestaurado[i].dibujarTexto();
+void dibujarPausa() {
+  for (i = 0; i < recuadroPausa.length; i++) {
+    recuadroPausa[i].dibujarRecuadro();
   }
-  botonBack.dibujarBoton();
+  textoPausa.dibujarTexto();
+  botonContinuar.dibujarBoton();
+  botonInicio.dibujarBoton();
 }
 
-void gameOver() {
-  panelGameOver.dibujarPanel();
-  for (i = 0; i < textoGameOver.length; i++) {
-    textoGameOver[i].dibujarTexto();
+void dibujarVictoria() {
+  recuadroVictoria.dibujarRecuadro();
+  for (i = 0; i < textoVictoria.length; i++) {
+    textoVictoria[i].dibujarTexto();
+  }
+  botonVolver.dibujarBoton();
+}
+
+void dibujarDerrota() {
+  recuadroDerrota.dibujarRecuadro();
+  for (i = 0; i < textoDerrota.length; i++) {
+    textoDerrota[i].dibujarTexto();
   }
   botonSi.dibujarBoton();
   botonNo.dibujarBoton();
+}
+
+void dibujarHUD() {
+  recuadroHUD.dibujarRecuadro();
+  dibujarVidas();
+  textoJuego.contenido = str(Puntos);
+  textoJuego.dibujarTexto();
+  if (!juegoPausado) {
+    botonPausa.dibujarBoton();
+  }
 }
