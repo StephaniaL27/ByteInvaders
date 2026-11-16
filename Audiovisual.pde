@@ -1,117 +1,88 @@
-// ---------- Recursos gráficos ----------
-
-PImage tituloMenu;
-PImage fondo;
-PImage[] estrellas = new PImage[8];
-PImage corazones;
-PImage Nave_jugador;
-PImage naveRoja;
-PImage naveVerde;
-PImage naveGris;
-
-// ---------- Fondo animado ----------
-
-int Frame_estrellas = 0;
-int FPS = 6;
-float velocidadFondo = 5;
-float fondoY = -velocidadFondo;
-
 // ---------- Audio ----------
 
-SoundFile sfxLaserShoot;
+SoundFile ostMenu;
+SoundFile ostOpeningCrawl;
+SoundFile ostJuego;
+SoundFile sfxAUG;
+SoundFile sfxAliado;
+SoundFile sfxGris;
+SoundFile sfxEnemigo;
+SoundFile sfxHurt;
 SoundFile sfxExplosion;
-SoundFile sfxVictory;
-SoundFile musicaJuego;
-SoundFile musicaMenu;
+SoundFile sfxVictoria3;
 boolean musicaJuegoPausada;
-
-// Carga y presentación de recursos audiovisuales
-
-void cargarImagenes() {
-  tituloMenu = loadImage("titulo_byteinvaders.png");
-  corazones = loadImage("corazones.png");
-  Nave_jugador = loadImage("nave.png");
-  naveRoja = loadImage("nave_roja.png");
-  naveVerde = loadImage("nave_verde.png");
-  naveGris = loadImage("nave_npc.png");
-  fondo = loadImage("fondo_loop_1920x1080.png");
-  for (i = 0; i < estrellas.length; i++) {
-    estrellas[i] = loadImage("estrellas_" + i + ".png");
-  }
-}
-
-void cargarFramesNaves() {
-  PImage[] imagenes = {Nave_jugador, naveVerde, naveGris, naveRoja};
-  for (j = 0; j < imagenes.length; j++) {
-    for (i = 0; i < framesNaves[j].length; i++) {
-      framesNaves[j][i] = imagenes[j].get(i * 64, 0, 64, 64);
-    }
-  }
-}
+float[] volumen = {1, 1};
 
 void cargarSonidos() {
-  sfxLaserShoot = new SoundFile(this, "laserShoot.wav");
+  ostMenu = new SoundFile(this, "Ice Path.wav");
+  ostOpeningCrawl = new SoundFile(this, "Star Wars - Main Theme.wav");
+  ostJuego = new SoundFile(this, "byte_invaders_theme.wav");
+  sfxAUG = new SoundFile(this, "laserShoot0.wav");
+  sfxAliado = new SoundFile(this, "laserShoot1.wav");
+  sfxGris = new SoundFile(this, "laserShoot2.wav");
+  sfxEnemigo = new SoundFile(this, "laserShoot3.wav");
+  sfxHurt = new SoundFile(this, "hitHurt.wav");
   sfxExplosion = new SoundFile(this, "explosion.wav");
-  sfxVictory = new SoundFile(this, "byte_invaders_victory.wav");
-  musicaJuego = new SoundFile(this, "byte_invaders_theme.wav");
-  musicaMenu = new SoundFile(this, "byte_invaders_menu_chill.wav");
+  sfxVictoria3 = new SoundFile(this, "Victory! (Wild Pokémon).wav");
 }
 
-void cargarFramesVidas() {
-  for (i = 0; i < FramesC.length; i++) {
-    FramesC[i] = corazones.get(i * 32, 0, 32, 32);
-  }
+void ecualizador() {
+  ostMenu.amp(volumen[0]);
+  ostOpeningCrawl.amp(volumen[0]);
+  ostJuego.amp(volumen[0]);
+  sfxAUG.amp(volumen[1]);
+  sfxAliado.amp(volumen[1]);
+  sfxGris.amp(volumen[1]);
+  sfxEnemigo.amp(volumen[1]);
+  sfxHurt.amp(volumen[1]);
+  sfxExplosion.amp(volumen[1]);
+  sfxVictoria3.amp(volumen[1]);
 }
 
-void actualizarFondo() {
-  if (pantalla != 1.2) {
-    fondoY = height / 2;
-  } else if (!juegoPausado && !juegoGanado && !gameOver) {
-    fondoY += velocidadFondo;
-    if (fondoY >= height) {
-      fondoY -= height;
-    }
-  }
-}
-
-void dibujarFondo(float desplazamiento) {
-  imageMode(CORNER);
-  if (!juegoPausado && frameCount % FPS == 0) {
-    Frame_estrellas = (Frame_estrellas + 1) % estrellas.length;
-  }
-  image(fondo, 0, int(desplazamiento), width, height);
-  image(fondo, 0, int(desplazamiento) - height, width, height);
-  image(estrellas[Frame_estrellas], 0, int(desplazamiento), width, height);
-  image(estrellas[Frame_estrellas], 0, int(desplazamiento) - height, width, height);
-  imageMode(CENTER);
-}
-
-void controlarMusica() {
+void controlarOSTs() {
   if (pantalla == 0 || pantalla > 1.2) {
-    sfxVictory.stop();
-    musicaJuego.stop();
+    sfxVictoria3.stop();
+    ostJuego.stop();
+    ostOpeningCrawl.stop();
     musicaJuegoPausada = false;
-    if (!musicaMenu.isPlaying()) {
-      musicaMenu.loop();
-      musicaMenu.amp(0.5);
+    if (!ostMenu.isPlaying()) {
+      ostMenu.loop();
+      ostMenu.amp(volumen[0]);
+    }
+  } else if (pantalla == 1.1) {
+    ostMenu.stop();
+    if (!ostOpeningCrawl.isPlaying()) {
+      ostOpeningCrawl.play();
+      ostOpeningCrawl.amp(volumen[0]);
     }
   } else {
-    musicaMenu.stop();
+    ostMenu.stop();
+    ostOpeningCrawl.stop();
     if (juegoGanado || gameOver) {
-      musicaJuego.stop();
+      ostJuego.stop();
       musicaJuegoPausada = false;
     } else if (juegoPausado) {
-      if (musicaJuego.isPlaying()) {
-        musicaJuego.pause();
+      if (ostJuego.isPlaying()) {
+        ostJuego.pause();
         musicaJuegoPausada = true;
       }
-    } else if (!musicaJuego.isPlaying()) {
-      if (musicaJuegoPausada) {
-        musicaJuego.play();
-        musicaJuegoPausada = false;
-      } else {
-        musicaJuego.loop();
+    } else {
+      if (!ostJuego.isPlaying()) {
+        if (musicaJuegoPausada) {
+          ostJuego.play();
+          ostJuego.amp(volumen[0]);
+          musicaJuegoPausada = false;
+        } else {
+          ostJuego.loop();
+          ostJuego.amp(volumen[0]);
+        }
       }
     }
   }
+}
+
+void sonarSFX(SoundFile sonido) {
+  sonido.stop();
+  sonido.play();
+  sonido.amp(volumen[1]);
 }
