@@ -7,20 +7,20 @@ Nave AUG;
 int cargadorAUG = 15;
 int indiceDisparoAUG = 0;
 int balasPendientesAUG = 0;
-float velocidadDisparos = 20;
-float[] balasAUGX = new float[cargadorAUG];
-float[] balasAUGY = new float[cargadorAUG];
-boolean[] balaAUGExiste = new boolean[cargadorAUG];
+float velocidadBalaAUG = 20;
+float[] balaAUGX = new float[cargadorAUG];
+float[] balaAUGY = new float[cargadorAUG];
+boolean[] balaAUGActiva = new boolean[cargadorAUG];
 
-void AUG() {
+void dispararJugador() {
   if (espacio && balasPendientesAUG == 0) {
     balasPendientesAUG = 3;
   }
-  if (balasPendientesAUG > 0 && !balaAUGExiste[indiceDisparoAUG]) {
-    sfxLaserShoot.play();
-    balaAUGExiste[indiceDisparoAUG] = true;
-    balasAUGX[indiceDisparoAUG] = AUG.x;
-    balasAUGY[indiceDisparoAUG] = AUG.y;
+  if (balasPendientesAUG > 0 && !balaAUGActiva[indiceDisparoAUG]) {
+    sonarSFX(sfxAUG);
+    balaAUGActiva[indiceDisparoAUG] = true;
+    balaAUGX[indiceDisparoAUG] = AUG.x;
+    balaAUGY[indiceDisparoAUG] = AUG.y;
     balasPendientesAUG--;
     indiceDisparoAUG++;
     if (indiceDisparoAUG == cargadorAUG) {
