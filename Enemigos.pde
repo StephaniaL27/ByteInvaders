@@ -2,19 +2,17 @@
 
 int maxEnemigos = 27;
 int[] direccionEnemigo = {1, -1, 1};
-float velocidad;
+float velocidadEnemigo;
 float dañoEnemigos;
 boolean[] existe = new boolean[maxEnemigos];
 Nave[] enemigo = new Nave[maxEnemigos];
 
 // ---------- Disparos de los enemigos ----------
 
-float velocidadDisparosEnemigos = 5;
-float[] balasEnemigoX = new float[maxEnemigos];
-float[] balasEnemigoY = new float[maxEnemigos];
-float[] balasEnemigoVX = new float[maxEnemigos];
-float[] balasEnemigoVel = new float[maxEnemigos];
-boolean[] balaEnemigoExiste = new boolean[maxEnemigos];
+float[] balaEnemigoX = new float[maxEnemigos];
+float[] balaEnemigoY = new float[maxEnemigos];
+float[] velocidadBalaEnemigo = new float[maxEnemigos];
+boolean[] balaEnemigoActiva = new boolean[maxEnemigos];
 
 void crearEnemigos() {
   float x, y;
@@ -29,18 +27,18 @@ void crearEnemigos() {
       for (j = 0; j < 9; j++) {
         x = width / 2 - 4 * 128 + j * 128;
         y = 64 + i * 128;
-        enemigo[k] = new Nave(x, y, velocidad, int(random(1, 4)), int(random(9, 11)), 3, dañoEnemigos, random(4000, 16000), millis());
+        enemigo[k] = new Nave(x, y, velocidadEnemigo, int(random(1, 4)), int(random(9, 11)), 3, dañoEnemigos, random(4000, 16000), millis());
         existe[k] = true;
-        balaEnemigoExiste[k] = false;
+        balaEnemigoActiva[k] = false;
         switch (enemigo[k].tipo) {
           case 1:
-            c1 += 1;
+            c1++;
             break;
           case 2:
-            c2 += 1;
+            c2++;
             break;
           default:
-            c3 += 1;
+            c3++;
         }
         k++;
       }
@@ -49,9 +47,7 @@ void crearEnemigos() {
 }
 
 void moverEnemigos() {
-
   // Cambia la dirección de cada fila cuando alcanza un extremo.
-
   for (i = 0; i < maxEnemigos; i++) {
     int fila = i / 9;
     if (existe[i]) {
@@ -70,15 +66,25 @@ void moverEnemigos() {
   }
 }
 
-void dispEnemigo() {
+void dispararEnemigo() {
   for (i = 0; i < maxEnemigos; i++) {
-    if (existe[i] && !balaEnemigoExiste[i] && millis() - enemigo[i].inicioCooldown >= enemigo[i].cooldown) {
-      balasEnemigoVel[i] = random(10, 20);
-      balaEnemigoExiste[i] = true;
-      balasEnemigoX[i] = enemigo[i].x;
-      balasEnemigoY[i] = enemigo[i].y;
+    if (existe[i] && !balaEnemigoActiva[i] && millis() - enemigo[i].inicioCooldown >= enemigo[i].cooldown) {
+      velocidadBalaEnemigo[i] = random(10, 20);
+      balaEnemigoActiva[i] = true;
+      balaEnemigoX[i] = enemigo[i].x;
+      balaEnemigoY[i] = enemigo[i].y;
       enemigo[i].inicioCooldown = millis();
-      sfxLaserShoot.play();
+      switch (enemigo[i].tipo) {
+        case 1:
+          sonarSFX(sfxAliado);
+          break;
+        case 2:
+          sonarSFX(sfxGris);
+          break;
+        case 3:
+          sonarSFX(sfxEnemigo);
+          break;
+      }
     }
   }
 }
