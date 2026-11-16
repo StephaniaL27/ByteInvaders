@@ -5,13 +5,14 @@ boolean izquierda;
 boolean abajo;
 boolean derecha;
 boolean espacio = false;
+boolean[] arrastrandoVolumen = new boolean[2];
 
 void mousePressed() {
   if (pantalla == 0) {
     boolean buscando = true;
     i = 0;
-    while (i < botonesMenu.length && buscando) {
-      if (botonesMenu[i].cursorEncima) {
+    while (i < botonMenu.length && buscando) {
+      if (botonMenu[i].cursorEncima) {
         if (i == 0) {
           iniciarPartida();
           pantalla = 1.1;
@@ -24,7 +25,7 @@ void mousePressed() {
     }
   } else if (pantalla == 1.2) {
     if (juegoGanado) {
-      if (botonBack.cursorEncima) {
+      if (botonVolver.cursorEncima) {
         pantalla = 0;
       }
     } else if (gameOver) {
@@ -34,44 +35,50 @@ void mousePressed() {
         pantalla = 0;
       }
     } else if (juegoPausado) {
-      if (botonContinue.cursorEncima || botonHome.cursorEncima) {
+      if (botonContinuar.cursorEncima || botonInicio.cursorEncima) {
         juegoPausado = false;
       }
-      if (botonHome.cursorEncima) {
+      if (botonInicio.cursorEncima) {
         pantalla = 0;
       }
-    } else if (botonPause.cursorEncima) {
+    } else if (botonPausa.cursorEncima) {
       juegoPausado = true;
     }
   } else if (pantalla > 1.2) {
     if (pantalla == 3) {
-      for (i = 0; i < botonesDificultad.length; i++) {
-        if (botonesDificultad[i].cursorEncima) {
-          for (j = 0; j < botonesDificultad.length; j++) {
-            if (i == j) {
-              botonesDificultad[j].seleccionado = true;
-            } else {
-              botonesDificultad[j].seleccionado = false;
-            }
-          }
-        }
+      for (i = 0; i < controlVolumen.length; i++) {
+        arrastrandoVolumen[i] = controlVolumen[i].cursorEncima;
       }
-      for (i = 0; i < botonesVelocidad.length; i++) {
-        if (botonesVelocidad[i].cursorEncima) {
-          for (j = 0; j < botonesVelocidad.length; j++) {
-            if (i == j) {
-              botonesVelocidad[j].seleccionado = true;
-            } else {
-              botonesVelocidad[j].seleccionado = false;
-            }
+      for (i = 0; i < botonDificultad.length; i++) {
+        if (botonDificultad[i].cursorEncima) {
+          for (j = 0; j < botonDificultad.length; j++) {
+            botonDificultad[j].seleccionado = i == j;
           }
         }
       }
     }
-    if (botonBack.cursorEncima) {
+    if (botonVolver.cursorEncima) {
       pantalla = 0;
     }
   }
+}
+
+void mouseDragged() {
+  if (pantalla == 3) {
+    if (arrastrandoVolumen[0]) {
+      controlVolumen[0].x = constrain(mouseX, recuadroAjustes[1].x - recuadroAjustes[1].w / 2, recuadroAjustes[1].x + recuadroAjustes[1].w / 2);
+      volumen[0] = map(controlVolumen[0].x, recuadroAjustes[1].x - recuadroAjustes[1].w / 2, recuadroAjustes[1].x + recuadroAjustes[1].w / 2, 0, 1);
+    }
+    if (arrastrandoVolumen[1]) {
+      controlVolumen[1].x = constrain(mouseX, recuadroAjustes[2].x - recuadroAjustes[2].w / 2, recuadroAjustes[2].x + recuadroAjustes[2].w / 2);
+      volumen[1] = map(controlVolumen[1].x, recuadroAjustes[2].x - recuadroAjustes[2].w / 2, recuadroAjustes[2].x + recuadroAjustes[2].w / 2, 0, 1);
+    }
+  }
+}
+
+void mouseReleased() {
+  arrastrandoVolumen[0] = false;
+  arrastrandoVolumen[1] = false;
 }
 
 void keyPressed() {
