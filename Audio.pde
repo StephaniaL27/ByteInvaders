@@ -1,6 +1,7 @@
 // ---------- Audio ----------
 
-SoundFile ostMenu;
+SoundFile ostMenuIntro;
+SoundFile ostMenuLoop;
 SoundFile ostOpeningCrawl;
 SoundFile ostJuego;
 SoundFile sfxAUG;
@@ -11,11 +12,13 @@ SoundFile sfxHurt;
 SoundFile sfxExplosion;
 SoundFile sfxVictoria3;
 boolean musicaJuegoPausada;
+boolean introMenuReproducida;
 float[] volumen = {1, 1};
 
 void cargarSonidos() {
-  ostMenu = new SoundFile(this, "Ice Path.wav");
-  ostOpeningCrawl = new SoundFile(this, "Star Wars - Main Theme.wav");
+  ostMenuIntro = new SoundFile(this, "Ice Path intro.wav");
+  ostMenuLoop = new SoundFile(this, "Ice Path loop.wav");
+  ostOpeningCrawl = new SoundFile(this, "Theme of Star Wars.wav");
   ostJuego = new SoundFile(this, "byte_invaders_theme.wav");
   sfxAUG = new SoundFile(this, "laserShoot0.wav");
   sfxAliado = new SoundFile(this, "laserShoot1.wav");
@@ -27,7 +30,8 @@ void cargarSonidos() {
 }
 
 void ecualizador() {
-  ostMenu.amp(volumen[0]);
+  ostMenuIntro.amp(volumen[0]);
+  ostMenuLoop.amp(volumen[0]);
   ostOpeningCrawl.amp(volumen[0]);
   ostJuego.amp(volumen[0]);
   sfxAUG.amp(volumen[1]);
@@ -45,36 +49,43 @@ void controlarOSTs() {
     ostJuego.stop();
     ostOpeningCrawl.stop();
     musicaJuegoPausada = false;
-    if (!ostMenu.isPlaying()) {
-      ostMenu.loop();
-      ostMenu.amp(volumen[0]);
-    }
-  } else if (pantalla == 1.1) {
-    ostMenu.stop();
-    if (!ostOpeningCrawl.isPlaying()) {
-      ostOpeningCrawl.play();
-      ostOpeningCrawl.amp(volumen[0]);
+    if (!introMenuReproducida) {
+      ostMenuIntro.play();
+      introMenuReproducida = true;
+    } else if (!ostMenuLoop.isPlaying() && (!ostMenuIntro.isPlaying() || ostMenuIntro.position() >= ostMenuIntro.duration() - 1 / 30.0)) {
+      ostMenuIntro.stop();
+      ostMenuLoop.loop();
+      ostMenuLoop.amp(volumen[0]);
     }
   } else {
-    ostMenu.stop();
-    ostOpeningCrawl.stop();
-    if (juegoGanado || gameOver) {
-      ostJuego.stop();
-      musicaJuegoPausada = false;
-    } else if (juegoPausado) {
-      if (ostJuego.isPlaying()) {
-        ostJuego.pause();
-        musicaJuegoPausada = true;
+    ostMenuIntro.stop();
+    ostMenuLoop.stop();
+    introMenuReproducida = false;
+    if (pantalla == 1.1) {
+      if (!ostOpeningCrawl.isPlaying()) {
+        ostOpeningCrawl.play();
+        ostOpeningCrawl.amp(volumen[0]);
       }
     } else {
-      if (!ostJuego.isPlaying()) {
-        if (musicaJuegoPausada) {
-          ostJuego.play();
-          ostJuego.amp(volumen[0]);
-          musicaJuegoPausada = false;
-        } else {
-          ostJuego.loop();
-          ostJuego.amp(volumen[0]);
+      ostOpeningCrawl.stop();
+      if (juegoGanado || gameOver) {
+        ostJuego.stop();
+        musicaJuegoPausada = false;
+      } else if (juegoPausado) {
+        if (ostJuego.isPlaying()) {
+          ostJuego.pause();
+          musicaJuegoPausada = true;
+        }
+      } else {
+        if (!ostJuego.isPlaying()) {
+          if (musicaJuegoPausada) {
+            ostJuego.play();
+            ostJuego.amp(volumen[0]);
+            musicaJuegoPausada = false;
+          } else {
+            ostJuego.loop();
+            ostJuego.amp(volumen[0]);
+          }
         }
       }
     }

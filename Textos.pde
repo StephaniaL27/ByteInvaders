@@ -99,9 +99,9 @@ void crearTextos() {
     new Texto(width / 2, height / 2 + escalar(20), "Algoritmia y Programación II -- Uninorte 2026", escalar(25), #FFFFFF, fuenteBoton, CENTER, CENTER),
     new Texto(width / 2, height / 2 + escalar(60), "", escalar(25), #FFFFFF, fuenteBoton, CENTER, CENTER),
     new Texto(width / 2, height / 2 + escalar(100), "MÚSICA", escalar(45), #00FFFF, fuenteBoton, CENTER, CENTER),
-    new Texto(width / 2, height / 2 + escalar(140), "Star Wars - Main Theme", escalar(25), #FFFFFF, fuenteBoton, CENTER, CENTER),
-    new Texto(width / 2, height / 2 + escalar(180), "Victory! (Wild Pokémon) - Pokémon Platinum", escalar(25), #FFFFFF, fuenteBoton, CENTER, CENTER),
-    new Texto(width / 2, height / 2 + escalar(220), "Ice Path - Pokémon Heart Gold and Soul Silver", escalar(25), #FFFFFF, fuenteBoton, CENTER, CENTER)
+    new Texto(width / 2, height / 2 + escalar(140), "Ice Path - Pokémon Heart Gold and Soul Silver", escalar(25), #FFFFFF, fuenteBoton, CENTER, CENTER),
+    new Texto(width / 2, height / 2 + escalar(180), "Theme of Star Wars - Super Star Wars (SNES)", escalar(25), #FFFFFF, fuenteBoton, CENTER, CENTER),
+    new Texto(width / 2, height / 2 + escalar(220), "Victory! (Wild Pokémon) - Pokémon Platinum", escalar(25), #FFFFFF, fuenteBoton, CENTER, CENTER)
   };
   textoPausa = new Texto(width / 2, height / 2 - escalar(75), "GAME PAUSED", escalar(50), #FFE600, fuenteBoton, CENTER, CENTER);
   textoVictoria = new Texto[] {
