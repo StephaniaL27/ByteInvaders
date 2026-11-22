@@ -1,24 +1,24 @@
 void dibujarInstrucciones() {
   recuadroInstrucciones.dibujarRecuadro();
-  for (i = 0; i < textoInstrucciones.length; i++) {
+  for (int i = 0; i < textoInstrucciones.length; i++) {
     textoInstrucciones[i].dibujarTexto();
   }
   botonVolver.dibujarBoton();
 }
 
 void dibujarAjustes() {
-  for (i = 0; i < recuadroAjustes.length; i++) {
+  for (int i = 0; i < recuadroAjustes.length; i++) {
     recuadroAjustes[i].dibujarRecuadro();
   }
-  textoAjustes[5].contenido = str(int(volumen[0] * 100)) + "%";
-  textoAjustes[7].contenido = str(int(volumen[1] * 100)) + "%";
-  for (i = 0; i < textoAjustes.length; i++) {
+  textoAjustes[3].contenido = str(int(volumen[0] * 100)) + "%";
+  textoAjustes[5].contenido = str(int(volumen[1] * 100)) + "%";
+  for (int i = 0; i < textoAjustes.length; i++) {
     textoAjustes[i].dibujarTexto();
   }
-  for (i = 0; i < botonDificultad.length; i++) {
+  for (int i = 0; i < botonDificultad.length; i++) {
     botonDificultad[i].dibujarBoton();
   }
-  for (i = 0; i < controlVolumen.length; i++) {
+  for (int i = 0; i < controlVolumen.length; i++) {
     controlVolumen[i].dibujarBoton();
   }
   botonHistoria.dibujarBoton();
@@ -27,14 +27,14 @@ void dibujarAjustes() {
 
 void dibujarCreditos() {
   recuadroCreditos.dibujarRecuadro();
-  for (i = 0; i < textoCreditos.length; i++) {
+  for (int i = 0; i < textoCreditos.length; i++) {
     textoCreditos[i].dibujarTexto();
   }
   botonVolver.dibujarBoton();
 }
 
 void dibujarPausa() {
-  for (i = 0; i < recuadroPausa.length; i++) {
+  for (int i = 0; i < recuadroPausa.length; i++) {
     recuadroPausa[i].dibujarRecuadro();
   }
   textoPausa.dibujarTexto();
@@ -44,7 +44,7 @@ void dibujarPausa() {
 
 void dibujarVictoria() {
   recuadroVictoria.dibujarRecuadro();
-  for (i = 0; i < textoVictoria.length; i++) {
+  for (int i = 0; i < textoVictoria.length; i++) {
     textoVictoria[i].dibujarTexto();
   }
   botonVolver.dibujarBoton();
@@ -52,7 +52,7 @@ void dibujarVictoria() {
 
 void dibujarDerrota() {
   recuadroDerrota.dibujarRecuadro();
-  for (i = 0; i < textoDerrota.length; i++) {
+  for (int i = 0; i < textoDerrota.length; i++) {
     textoDerrota[i].dibujarTexto();
   }
   botonSi.dibujarBoton();

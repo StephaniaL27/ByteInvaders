@@ -1,33 +1,32 @@
 // ---------- Enemigos ----------
 
 int maxEnemigos = 27;
-int[] direccionEnemigo = {1, -1, 1};
 float velocidadEnemigo;
-float dañoEnemigos;
 boolean[] existe = new boolean[maxEnemigos];
+int[] direccionEnemigo = {1, -1, 1};
 Nave[] enemigo = new Nave[maxEnemigos];
 
 // ---------- Disparos de los enemigos ----------
 
+boolean[] balaEnemigoActiva = new boolean[maxEnemigos];
 float[] balaEnemigoX = new float[maxEnemigos];
 float[] balaEnemigoY = new float[maxEnemigos];
 float[] velocidadBalaEnemigo = new float[maxEnemigos];
-boolean[] balaEnemigoActiva = new boolean[maxEnemigos];
 
 void crearEnemigos() {
-  float x, y;
   int c1, c2, c3;
   int k;
-  for (i = 0; i < 3; i++) {
+  float x, y;
+  for (int i = 0; i < 3; i++) {
     do {
       k = i * 9;
       c1 = 0;
       c2 = 0;
       c3 = 0;
-      for (j = 0; j < 9; j++) {
-        x = width / 2 - 4 * 128 + j * 128;
-        y = 64 + i * 128;
-        enemigo[k] = new Nave(x, y, velocidadEnemigo, int(random(1, 4)), int(random(9, 11)), 3, dañoEnemigos, random(4000, 16000), millis());
+      for (int j = 0; j < 9; j++) {
+        x = posicion(j, width / 2 - 4 * 128, 128);
+        y = posicion(i, 64, 128);
+        enemigo[k] = new Nave(x, y, velocidadEnemigo, int(random(1, 4)), int(random(9, 11)), 3, random(4000, 16000), millis());
         existe[k] = true;
         balaEnemigoActiva[k] = false;
         switch (enemigo[k].tipo) {
@@ -48,7 +47,7 @@ void crearEnemigos() {
 
 void moverEnemigos() {
   // Cambia la dirección de cada fila cuando alcanza un extremo.
-  for (i = 0; i < maxEnemigos; i++) {
+  for (int i = 0; i < maxEnemigos; i++) {
     int fila = i / 9;
     if (existe[i]) {
       if (direccionEnemigo[fila] == -1 && enemigo[i].x <= 64) {
@@ -58,7 +57,7 @@ void moverEnemigos() {
       }
     }
   }
-  for (i = 0; i < maxEnemigos; i++) {
+  for (int i = 0; i < maxEnemigos; i++) {
     int fila = i / 9;
     if (existe[i]) {
       enemigo[i].x += enemigo[i].v * direccionEnemigo[fila];
@@ -67,8 +66,8 @@ void moverEnemigos() {
 }
 
 void dispararEnemigo() {
-  for (i = 0; i < maxEnemigos; i++) {
-    if (existe[i] && !balaEnemigoActiva[i] && millis() - enemigo[i].inicioCooldown >= enemigo[i].cooldown) {
+  for (int i = 0; i < maxEnemigos; i++) {
+    if ((enemigo[i].tipo != 2 || enemigo[i].hiddenValue == 10) && existe[i] && !balaEnemigoActiva[i] && millis() - enemigo[i].inicioCooldown >= enemigo[i].cooldown) {
       velocidadBalaEnemigo[i] = random(10, 20);
       balaEnemigoActiva[i] = true;
       balaEnemigoX[i] = enemigo[i].x;

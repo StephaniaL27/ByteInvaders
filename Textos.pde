@@ -1,27 +1,28 @@
 // ---------- Textos ----------
 
 Texto textoHistoria[] = new Texto[historia.length];
-Texto textoJuego;
 Texto textoInstrucciones[];
 Texto textoAjustes[];
 Texto textoCreditos[];
-Texto textoPausa;
 Texto textoVictoria[];
 Texto textoDerrota[];
+Texto textoJuego;
+Texto textoPausa;
 
 class Texto {
-  float x, y;
-  String contenido;
-  float tamaño;
-  color colorTexto;
-  PFont fuente;
   int alineacionX, alineacionY;
+  color colorTexto;
+  float x, y;
+  float tamaño;
+  String contenido;
+  PFont fuente;
 
+  // Recibe medidas del diseño (1920 × 1080, desde la esquina superior izquierda) y las escala.
   Texto(float x, float y, String contenido, float tamaño, color colorTexto, PFont fuente, int alineacionX, int alineacionY) {
-    this.x = x;
-    this.y = y;
+    this.x = escalar(x);
+    this.y = escalar(y);
     this.contenido = contenido;
-    this.tamaño = tamaño;
+    this.tamaño = escalar(tamaño);
     this.colorTexto = colorTexto;
     this.fuente = fuente;
     this.alineacionX = alineacionX;
@@ -51,73 +52,62 @@ class Texto {
 }
 
 void crearTextos() {
-  for (i = 0; i < historia.length; i++) {
-    textoHistoria[i] = new Texto(width / 2, 0, historia[i], tamañoT, #FFED00, fuenteHistoria, CENTER, CENTER);
+  for (int i = 0; i < historia.length; i++) {
+    textoHistoria[i] = new Texto(960, 0, historia[i], tamañoT, #FFED00, fuenteHistoria, CENTER, CENTER);
   }
-  textoJuego = new Texto(width / 2 - escalar(735), height / 2 + escalar(480), str(Puntos), escalar(45), #FFFFFF, fuenteBoton, LEFT, CENTER);
+  textoJuego = new Texto(224, 1020, str(Puntos), letraT2, #FFFFFF, fuenteBoton, LEFT, CENTER);
   textoInstrucciones = new Texto[] {
-    new Texto(width / 2, height / 2 - escalar(220), "HOW TO PLAY", escalar(50), #FFE600, fuenteBoton, CENTER, CENTER),
-    new Texto(width / 2, height / 2 - escalar(180), "", escalar(25), #FFFFFF, fuenteBoton, CENTER, CENTER),
-    new Texto(width / 2, height / 2 - escalar(140), "CONTROLES", escalar(45), #00FFFF, fuenteBoton, CENTER, CENTER),
-    new Texto(width / 2, height / 2 - escalar(100), "- Moverte: teclas W, A, S, D o flechas de dirección", escalar(25), #FFFFFF, fuenteBoton, LEFT, CENTER),
-    new Texto(width / 2, height / 2 - escalar(60), "- Disparar / Acción: barra espaciadora", escalar(25), #FFFFFF, fuenteBoton, LEFT, CENTER),
-    new Texto(width / 2, height / 2 - escalar(20), "- Pausar: tecla ENTER o botón ||", escalar(25), #FFFFFF, fuenteBoton, LEFT, CENTER),
-    new Texto(width / 2, height / 2 + escalar(20), "", escalar(25), #FFFFFF, fuenteBoton, CENTER, CENTER),
-    new Texto(width / 2, height / 2 + escalar(60), "FILTRADO DE MENSAJES", escalar(45), #00FFFF, fuenteBoton, CENTER, CENTER),
-    new Texto(width / 2, height / 2 + escalar(100), "Y BIENESTAR DIGITAL", escalar(45), #00FFFF, fuenteBoton, CENTER, CENTER),
-    new Texto(width / 2, height / 2 + escalar(140), "Pilota tu nave y filtra el contenido cibernético que llega a la pantalla:", escalar(25), #FFFFFF, fuenteBoton, CENTER, CENTER),
-    new Texto(width / 2, height / 2 + escalar(180), "", escalar(25), #FFFFFF, fuenteBoton, CENTER, CENTER),
-    new Texto(width / 2, height / 2 + escalar(220), "¡Mantén el equilibrio cibernético y supera el puntaje máximo!", escalar(35), #00FFFF, fuenteBoton, CENTER, CENTER)
+    new Texto(960, posicion(0, 320, letraN + espacioP), "HOW TO PLAY", letraT1, #FFE600, fuenteBoton, CENTER, CENTER),
+    new Texto(960, posicion(2, 320, letraN + espacioP), "CONTROLES", letraT2, #00FFFF, fuenteBoton, CENTER, CENTER),
+    new Texto(960, posicion(3, 320, letraN + espacioP), "- Moverte: teclas W, A, S, D o flechas de dirección", letraN, #FFFFFF, fuenteBoton, LEFT, CENTER),
+    new Texto(960, posicion(4, 320, letraN + espacioP), "- Disparar / Acción: barra espaciadora", letraN, #FFFFFF, fuenteBoton, LEFT, CENTER),
+    new Texto(960, posicion(5, 320, letraN + espacioP), "- Pausar: tecla ENTER o botón ||", letraN, #FFFFFF, fuenteBoton, LEFT, CENTER),
+    new Texto(960, posicion(7, 320, letraN + espacioP), "FILTRADO DE MENSAJES", letraT2, #00FFFF, fuenteBoton, CENTER, CENTER),
+    new Texto(960, posicion(8, 320, letraN + espacioP), "Y BIENESTAR DIGITAL", letraT2, #00FFFF, fuenteBoton, CENTER, CENTER),
+    new Texto(960, posicion(9, 320, letraN + espacioP), "Pilota tu nave y filtra el contenido cibernético que llega a la pantalla:", letraN, #FFFFFF, fuenteBoton, CENTER, CENTER),
+    new Texto(960, posicion(11, 320, letraN + espacioP), "¡Mantén el equilibrio cibernético y supera el puntaje máximo!", letraS, #00FFFF, fuenteBoton, CENTER, CENTER)
   };
-  textFont(fuenteBoton, escalar(25));
+  textFont(fuenteBoton, escalar(letraN));
   float anchoLista = 0;
-  for (i = 3; i < 6; i++) {
+  for (int i = 2; i < 5; i++) {
     anchoLista = max(anchoLista, textWidth(textoInstrucciones[i].contenido));
   }
-  for (i = 3; i < 6; i++) {
-    textoInstrucciones[i].x = width / 2 - anchoLista / 2;
+  for (int i = 2; i < 5; i++) {
+    textoInstrucciones[i].x = escalar(960) - anchoLista / 2;
   }
+  // Ajustes: 16 entre cada etiqueta y su control, 32 entre grupos. Música y efectos van en la misma fila que su barra.
   textoAjustes = new Texto[] {
-    new Texto(width / 2, height / 2 - escalar(180), "SETTINGS", escalar(50), #FFE600, fuenteBoton, CENTER, CENTER),
-    new Texto(width / 2, height / 2 - escalar(140), "", escalar(25), #FFFFFF, fuenteBoton, CENTER, CENTER),
-    new Texto(width / 2, height / 2 - escalar(100), "Dificultad:", escalar(25), #FFFFFF, fuenteBoton, CENTER, CENTER),
-    new Texto(width / 2, height / 2 - escalar(60), "", escalar(25), #FFFFFF, fuenteBoton, CENTER, CENTER),
-    new Texto(width / 2, height / 2 - escalar(20), "Música:", escalar(25), #FFFFFF, fuenteBoton, CENTER, CENTER),
-    new Texto(width / 2 + escalar(420), height / 2 + escalar(20), "100%", escalar(25), #FFFFFF, fuenteBoton, LEFT, CENTER),
-    new Texto(width / 2, height / 2 + escalar(60), "Efectos de sonido:", escalar(25), #FFFFFF, fuenteBoton, CENTER, CENTER),
-    new Texto(width / 2 + escalar(420), height / 2 + escalar(100), "100%", escalar(25), #FFFFFF, fuenteBoton, LEFT, CENTER),
-    new Texto(width / 2, height / 2 + escalar(140), "Modo de juego:", escalar(25), #FFFFFF, fuenteBoton, CENTER, CENTER),
-    new Texto(width / 2, height / 2 + escalar(180), "", escalar(25), #FFFFFF, fuenteBoton, CENTER, CENTER)
+    new Texto(960, 364, "SETTINGS", letraT1, #FFE600, fuenteBoton, CENTER, CENTER),
+    new Texto(960, 436, "Dificultad:", letraN, #FFFFFF, fuenteBoton, CENTER, CENTER),
+    new Texto(1032 - 640 / 2 - espacioP, 556, "Música:", letraN, #FFFFFF, fuenteBoton, RIGHT, CENTER),
+    new Texto(1380, 556, "100%", letraN, #FFFFFF, fuenteBoton, LEFT, CENTER),
+    new Texto(1032 - 640 / 2 - espacioP, 612, "Efectos de sonido:", letraN, #FFFFFF, fuenteBoton, RIGHT, CENTER),
+    new Texto(1380, 612, "100%", letraN, #FFFFFF, fuenteBoton, LEFT, CENTER),
+    new Texto(960, 668, "Modo de juego:", letraN, #FFFFFF, fuenteBoton, CENTER, CENTER)
   };
   textoCreditos = new Texto[] {
-    new Texto(width / 2, height / 2 - escalar(220), "CREDITS", escalar(50), #FFE600, fuenteBoton, CENTER, CENTER),
-    new Texto(width / 2, height / 2 - escalar(180), "", escalar(25), #FFFFFF, fuenteBoton, CENTER, CENTER),
-    new Texto(width / 2, height / 2 - escalar(140), "BYTE INVADERS - Equipo 6", escalar(45), #00FFFF, fuenteBoton, CENTER, CENTER),
-    new Texto(width / 2, height / 2 - escalar(100), "Stephania Lamadrid", escalar(25), #FFFFFF, fuenteBoton, CENTER, CENTER),
-    new Texto(width / 2, height / 2 - escalar(60), "Matías Guarín", escalar(25), #FFFFFF, fuenteBoton, CENTER, CENTER),
-    new Texto(width / 2, height / 2 - escalar(20), "Natalia Herrera", escalar(25), #FFFFFF, fuenteBoton, CENTER, CENTER),
-    new Texto(width / 2, height / 2 + escalar(20), "Algoritmia y Programación II -- Uninorte 2026", escalar(25), #FFFFFF, fuenteBoton, CENTER, CENTER),
-    new Texto(width / 2, height / 2 + escalar(60), "", escalar(25), #FFFFFF, fuenteBoton, CENTER, CENTER),
-    new Texto(width / 2, height / 2 + escalar(100), "MÚSICA", escalar(45), #00FFFF, fuenteBoton, CENTER, CENTER),
-    new Texto(width / 2, height / 2 + escalar(140), "Ice Path - Pokémon Heart Gold and Soul Silver", escalar(25), #FFFFFF, fuenteBoton, CENTER, CENTER),
-    new Texto(width / 2, height / 2 + escalar(180), "Theme of Star Wars - Super Star Wars (SNES)", escalar(25), #FFFFFF, fuenteBoton, CENTER, CENTER),
-    new Texto(width / 2, height / 2 + escalar(220), "Victory! (Wild Pokémon) - Pokémon Platinum", escalar(25), #FFFFFF, fuenteBoton, CENTER, CENTER)
+    new Texto(960, posicion(0, 320, letraN + espacioP), "CREDITS", letraT1, #FFE600, fuenteBoton, CENTER, CENTER),
+    new Texto(960, posicion(2, 320, letraN + espacioP), "BYTE INVADERS - Equipo 6", letraT2, #00FFFF, fuenteBoton, CENTER, CENTER),
+    new Texto(960, posicion(3, 320, letraN + espacioP), "Stephania Lamadrid", letraN, #FFFFFF, fuenteBoton, CENTER, CENTER),
+    new Texto(960, posicion(4, 320, letraN + espacioP), "Matías Guarín", letraN, #FFFFFF, fuenteBoton, CENTER, CENTER),
+    new Texto(960, posicion(5, 320, letraN + espacioP), "Natalia Herrera", letraN, #FFFFFF, fuenteBoton, CENTER, CENTER),
+    new Texto(960, posicion(6, 320, letraN + espacioP), "Algoritmia y Programación II -- Uninorte 2026", letraN, #FFFFFF, fuenteBoton, CENTER, CENTER),
+    new Texto(960, posicion(8, 320, letraN + espacioP), "MÚSICA", letraT2, #00FFFF, fuenteBoton, CENTER, CENTER),
+    new Texto(960, posicion(9, 320, letraN + espacioP), "Ice Path - Pokémon Heart Gold and Soul Silver", letraN, #FFFFFF, fuenteBoton, CENTER, CENTER),
+    new Texto(960, posicion(10, 320, letraN + espacioP), "Theme of Star Wars - Super Star Wars (SNES)", letraN, #FFFFFF, fuenteBoton, CENTER, CENTER),
+    new Texto(960, posicion(11, 320, letraN + espacioP), "Victory! (Wild Pokémon) - Pokémon Platinum", letraN, #FFFFFF, fuenteBoton, CENTER, CENTER)
   };
-  textoPausa = new Texto(width / 2, height / 2 - escalar(75), "GAME PAUSED", escalar(50), #FFE600, fuenteBoton, CENTER, CENTER);
+  textoPausa = new Texto(960, 460, "GAME PAUSED", letraT1, #FFE600, fuenteBoton, CENTER, CENTER);
   textoVictoria = new Texto[] {
-    new Texto(width / 2, height / 2 - escalar(100), "¡EQUILIBRIO RESTAURADO!", escalar(50), #FFE600, fuenteBoton, CENTER, CENTER),
-    new Texto(width / 2, height / 2 - escalar(60), "", escalar(25), #FFFFFF, fuenteBoton, CENTER, CENTER),
-    new Texto(width / 2, height / 2 - escalar(20), "THE NETWORK ESTÁ A SALVO", escalar(35), #00FFFF, fuenteBoton, CENTER, CENTER),
-    new Texto(width / 2, height / 2 + escalar(20), "No todo mensaje merece una respuesta.", escalar(25), #FFFFFF, fuenteBoton, CENTER, CENTER),
-    new Texto(width / 2, height / 2 + escalar(60), "Elegir qué bloqueas, qué apoyas y qué ignoras también", escalar(25), #FFFFFF, fuenteBoton, CENTER, CENTER),
-    new Texto(width / 2, height / 2 + escalar(100), "es cuidar a los demás.", escalar(25), #FFFFFF, fuenteBoton, CENTER, CENTER)
+    new Texto(960, posicion(0, 440, letraN + espacioP), "¡EQUILIBRIO RESTAURADO!", letraT1, #FFE600, fuenteBoton, CENTER, CENTER),
+    new Texto(960, posicion(2, 440, letraN + espacioP), "THE NETWORK ESTÁ A SALVO", letraS, #00FFFF, fuenteBoton, CENTER, CENTER),
+    new Texto(960, posicion(3, 440, letraN + espacioP), "No todo mensaje merece una respuesta.", letraN, #FFFFFF, fuenteBoton, CENTER, CENTER),
+    new Texto(960, posicion(4, 440, letraN + espacioP), "Elegir qué bloqueas, qué apoyas y qué ignoras también", letraN, #FFFFFF, fuenteBoton, CENTER, CENTER),
+    new Texto(960, posicion(5, 440, letraN + espacioP), "es cuidar a los demás.", letraN, #FFFFFF, fuenteBoton, CENTER, CENTER)
   };
   textoDerrota = new Texto[] {
-    new Texto(width / 2, height / 2 - escalar(100), "GAME OVER", escalar(50), #FFE600, fuenteBoton, CENTER, CENTER),
-    new Texto(width / 2, height / 2 - escalar(60), "", escalar(25), #FFFFFF, fuenteBoton, CENTER, CENTER),
-    new Texto(width / 2, height / 2 - escalar(20), "Las señales hostiles ganaron terreno.", escalar(35), #00FFFF, fuenteBoton, CENTER, CENTER),
-    new Texto(width / 2, height / 2 + escalar(20), "¿Jugar de nuevo?", escalar(35), #00FFFF, fuenteBoton, CENTER, CENTER),
-    new Texto(width / 2, height / 2 + escalar(60), "", escalar(25), #FFFFFF, fuenteBoton, CENTER, CENTER),
-    new Texto(width / 2, height / 2 + escalar(100), "", escalar(25), #FFFFFF, fuenteBoton, CENTER, CENTER)
+    new Texto(960, posicion(0, 440, letraN + espacioP), "GAME OVER", letraT1, #FFE600, fuenteBoton, CENTER, CENTER),
+    new Texto(960, posicion(2, 440, letraN + espacioP), "Las señales hostiles ganaron terreno.", letraS, #00FFFF, fuenteBoton, CENTER, CENTER),
+    new Texto(960, posicion(3, 440, letraN + espacioP), "¿Jugar de nuevo?", letraS, #00FFFF, fuenteBoton, CENTER, CENTER)
   };
 }

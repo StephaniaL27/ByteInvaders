@@ -1,5 +1,8 @@
 // ---------- Jugador ----------
 
+boolean escudoActivo;
+float inicioInvulnerable;
+float inicioLento;
 Nave AUG;
 
 // ---------- Disparos del jugador ----------
@@ -8,9 +11,9 @@ int cargadorAUG = 15;
 int indiceDisparoAUG = 0;
 int balasPendientesAUG = 0;
 float velocidadBalaAUG = 20;
+boolean[] balaAUGActiva = new boolean[cargadorAUG];
 float[] balaAUGX = new float[cargadorAUG];
 float[] balaAUGY = new float[cargadorAUG];
-boolean[] balaAUGActiva = new boolean[cargadorAUG];
 
 void dispararJugador() {
   if (espacio && balasPendientesAUG == 0) {
@@ -36,26 +39,31 @@ void dispararJugador() {
 }
 
 void moverJugador() {
+  float velocidad = AUG.v;
+  // Tras chocar con una roja, la nave va a la mitad de velocidad durante 3 s.
+  if (millis() - inicioLento < 3000) {
+    velocidad /= 2;
+  }
   if (arriba) {
-    AUG.y -= AUG.v;
+    AUG.y -= velocidad;
   }
   if (izquierda) {
-    AUG.x -= AUG.v;
+    AUG.x -= velocidad;
   }
   if (abajo) {
-    AUG.y += AUG.v;
+    AUG.y += velocidad;
   }
   if (derecha) {
-    AUG.x += AUG.v;
+    AUG.x += velocidad;
   }
   if (AUG.x < 64) {
-    AUG.x += AUG.v;
+    AUG.x += velocidad;
   } else if (AUG.x > width - 64) {
-    AUG.x -= AUG.v;
+    AUG.x -= velocidad;
   }
   if (AUG.y < 64) {
-    AUG.y += AUG.v;
+    AUG.y += velocidad;
   } else if (AUG.y > height - 64) {
-    AUG.y -= AUG.v;
+    AUG.y -= velocidad;
   }
 }

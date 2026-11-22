@@ -10,7 +10,7 @@ boolean[] arrastrandoVolumen = new boolean[2];
 void mousePressed() {
   if (pantalla == 0) {
     boolean buscando = true;
-    i = 0;
+    int i = 0;
     while (i < botonMenu.length && buscando) {
       if (botonMenu[i].cursorEncima) {
         if (i == 0) {
@@ -46,12 +46,12 @@ void mousePressed() {
     }
   } else if (pantalla > 1.2) {
     if (pantalla == 3) {
-      for (i = 0; i < controlVolumen.length; i++) {
+      for (int i = 0; i < controlVolumen.length; i++) {
         arrastrandoVolumen[i] = controlVolumen[i].cursorEncima;
       }
-      for (i = 0; i < botonDificultad.length; i++) {
+      for (int i = 0; i < botonDificultad.length; i++) {
         if (botonDificultad[i].cursorEncima) {
-          for (j = 0; j < botonDificultad.length; j++) {
+          for (int j = 0; j < botonDificultad.length; j++) {
             botonDificultad[j].seleccionado = i == j;
           }
         }
@@ -82,27 +82,27 @@ void mouseReleased() {
 }
 
 void keyPressed() {
+  // Las teclas de movimiento se registran en cualquier pantalla para que la nave responda
+  // aunque ya estuvieran presionadas al empezar la partida.
+  if (key == 'w' || key == 'W' || keyCode == UP) {
+    arriba = true;
+  }
+  if (key == 'a' || key == 'A' || keyCode == LEFT) {
+    izquierda = true;
+  }
+  if ((key == 's' || key == 'S' || keyCode == DOWN) && AUG.y < height) {
+    abajo = true;
+  }
+  if (key == 'd' || key == 'D' || keyCode == RIGHT) {
+    derecha = true;
+  }
   if (pantalla == 1.1 && key == ' ') {
     pantalla = 1.2;
   } else if (pantalla == 1.2 && !gameOver && !juegoGanado) {
     if (keyCode == ENTER) {
       juegoPausado = !juegoPausado;
-    } else if (!juegoPausado) {
-      if (key == 'w' || key == 'W' || keyCode == UP) {
-        arriba = true;
-      }
-      if (key == 'a' || key == 'A' || keyCode == LEFT) {
-        izquierda = true;
-      }
-      if ((key == 's' || key == 'S' || keyCode == DOWN) && AUG.y < height) {
-        abajo = true;
-      }
-      if (key == 'd' || key == 'D' || keyCode == RIGHT) {
-        derecha = true;
-      }
-      if (key == ' ') {
-        espacio = true;
-      }
+    } else if (!juegoPausado && key == ' ') {
+      espacio = true;
     }
   }
 }

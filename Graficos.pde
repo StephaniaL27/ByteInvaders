@@ -2,12 +2,12 @@
 
 PImage tituloMenu;
 PImage fondo;
-PImage[] estrellas = new PImage[8];
 PImage corazones;
 PImage naveJugador;
 PImage naveVerde;
 PImage naveGris;
 PImage naveRoja;
+PImage[] estrellas = new PImage[8];
 
 // ---------- Fondo animado ----------
 
@@ -29,22 +29,22 @@ void cargarImagenes() {
   naveGris = loadImage("nave_gris.png");
   naveRoja = loadImage("nave_roja.png");
   fondo = loadImage("fondo_loop_1920x1080.png");
-  for (i = 0; i < estrellas.length; i++) {
+  for (int i = 0; i < estrellas.length; i++) {
     estrellas[i] = loadImage("estrellas_" + i + ".png");
   }
 }
 
 void cargarFramesNaves() {
   PImage[] imagenes = {naveJugador, naveVerde, naveGris, naveRoja};
-  for (j = 0; j < imagenes.length; j++) {
-    for (i = 0; i < framesNaves[j].length; i++) {
-      framesNaves[j][i] = imagenes[j].get(i * 64, 0, 64, 64);
+  for (int i = 0; i < imagenes.length; i++) {
+    for (int j = 0; j < framesNaves[i].length; j++) {
+      framesNaves[i][j] = imagenes[i].get(j * 64, 0, 64, 64);
     }
   }
 }
 
 void cargarFramesVidas() {
-  for (i = 0; i < framesVidas.length; i++) {
+  for (int i = 0; i < framesVidas.length; i++) {
     framesVidas[i] = corazones.get(i * 32, 0, 32, 32);
   }
 }
@@ -76,7 +76,7 @@ void dibujarVidas() {
   if (!juegoPausado && frameCount % intervaloEstrellas == 0) {
     FrameActualVidas = (FrameActualVidas + 1) % framesVidas.length;
   }
-  for (i = 0; i < AUG.vidas; i++) {
+  for (int i = 0; i < AUG.vidas; i++) {
     image(framesVidas[FrameActualVidas], width / 2 - escalar(900) + i * escalar(60), height / 2 + escalar(480), escalar(60), escalar(60));
   }
 }

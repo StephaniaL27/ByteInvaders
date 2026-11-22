@@ -1,7 +1,7 @@
 // ---------- Audio ----------
 
-SoundFile ostMenuIntro;
-SoundFile ostMenuLoop;
+boolean musicaJuegoPausada;
+SoundFile ostMenu;
 SoundFile ostOpeningCrawl;
 SoundFile ostJuego;
 SoundFile sfxAUG;
@@ -11,13 +11,10 @@ SoundFile sfxEnemigo;
 SoundFile sfxHurt;
 SoundFile sfxExplosion;
 SoundFile sfxVictoria3;
-boolean musicaJuegoPausada;
-boolean introMenuReproducida;
 float[] volumen = {1, 1};
 
 void cargarSonidos() {
-  ostMenuIntro = new SoundFile(this, "Ice Path intro.wav");
-  ostMenuLoop = new SoundFile(this, "Ice Path loop.wav");
+  ostMenu = new SoundFile(this, "1-79. Ice Path.wav");
   ostOpeningCrawl = new SoundFile(this, "Theme of Star Wars.wav");
   ostJuego = new SoundFile(this, "byte_invaders_theme.wav");
   sfxAUG = new SoundFile(this, "laserShoot0.wav");
@@ -26,12 +23,11 @@ void cargarSonidos() {
   sfxEnemigo = new SoundFile(this, "laserShoot3.wav");
   sfxHurt = new SoundFile(this, "hitHurt.wav");
   sfxExplosion = new SoundFile(this, "explosion.wav");
-  sfxVictoria3 = new SoundFile(this, "Victory! (Wild Pokémon).wav");
+  sfxVictoria3 = new SoundFile(this, "1-10. Victory! (Wild Pokémon).wav");
 }
 
 void ecualizador() {
-  ostMenuIntro.amp(volumen[0]);
-  ostMenuLoop.amp(volumen[0]);
+  ostMenu.amp(volumen[0]);
   ostOpeningCrawl.amp(volumen[0]);
   ostJuego.amp(volumen[0]);
   sfxAUG.amp(volumen[1]);
@@ -49,18 +45,12 @@ void controlarOSTs() {
     ostJuego.stop();
     ostOpeningCrawl.stop();
     musicaJuegoPausada = false;
-    if (!introMenuReproducida) {
-      ostMenuIntro.play();
-      introMenuReproducida = true;
-    } else if (!ostMenuLoop.isPlaying() && (!ostMenuIntro.isPlaying() || ostMenuIntro.position() >= ostMenuIntro.duration() - 1 / 30.0)) {
-      ostMenuIntro.stop();
-      ostMenuLoop.loop();
-      ostMenuLoop.amp(volumen[0]);
+    if (!ostMenu.isPlaying()) {
+      ostMenu.loop();
+      ostMenu.amp(volumen[0]);
     }
   } else {
-    ostMenuIntro.stop();
-    ostMenuLoop.stop();
-    introMenuReproducida = false;
+    ostMenu.stop();
     if (pantalla == 1.1) {
       if (!ostOpeningCrawl.isPlaying()) {
         ostOpeningCrawl.play();

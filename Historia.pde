@@ -71,12 +71,12 @@ PFont fuenteHistoria;
 PGraphics capaTexto;
 
 void ejecutarHistoria() {
-  for (i = 0; i < maxEnemigos; i++) {
+  for (int i = 0; i < maxEnemigos; i++) {
     enemigo[i].inicioCooldown = millis();
   }
   capaTexto.beginDraw();
   capaTexto.background(0, 0);
-  for (i = 0; i < textoHistoria.length; i++) {
+  for (int i = 0; i < textoHistoria.length; i++) {
     float distanciaRecorrida = desplazamientoTexto - i * interlineado;
     if (distanciaRecorrida > -interlineado) {
       float cercania = profundidad / (profundidad + distanciaRecorrida);
