@@ -51,6 +51,7 @@ void mousePressed() {
       }
       for (int i = 0; i < botonDificultad.length; i++) {
         if (botonDificultad[i].cursorEncima) {
+          dificultad = i;
           for (int j = 0; j < botonDificultad.length; j++) {
             botonDificultad[j].seleccionado = i == j;
           }

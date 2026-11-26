@@ -12,9 +12,7 @@ PImage[] estrellas = new PImage[8];
 // ---------- Fondo animado ----------
 
 int frameActualEstrellas = 0;
-int intervaloEstrellas = 6;
-float velocidadFondo = 5;
-float fondoY = -velocidadFondo;
+float fondoY = -6;
 
 // ---------- HUD ----------
 
@@ -53,7 +51,7 @@ void actualizarFondo() {
   if (pantalla != 1.2) {
     fondoY = height / 2;
   } else if (!juegoPausado && !juegoGanado && !gameOver) {
-    fondoY += velocidadFondo;
+    fondoY += 6;
     if (fondoY >= height) {
       fondoY -= height;
     }
@@ -62,7 +60,7 @@ void actualizarFondo() {
 
 void dibujarFondo(float desplazamiento) {
   imageMode(CORNER);
-  if (!juegoPausado && frameCount % intervaloEstrellas == 0) {
+  if (!juegoPausado && frameCount % 6 == 0) {
     frameActualEstrellas = (frameActualEstrellas + 1) % estrellas.length;
   }
   image(fondo, 0, int(desplazamiento), width, height);
@@ -73,7 +71,7 @@ void dibujarFondo(float desplazamiento) {
 }
 
 void dibujarVidas() {
-  if (!juegoPausado && frameCount % intervaloEstrellas == 0) {
+  if (!juegoPausado && frameCount % 6 == 0) {
     FrameActualVidas = (FrameActualVidas + 1) % framesVidas.length;
   }
   for (int i = 0; i < AUG.vidas; i++) {

@@ -20,7 +20,9 @@ void perderVida(int i) {
     enemigo[i].vidas--;
     if (enemigo[i].vidas <= 0) {
       existe[i] = false;
-      balaEnemigoActiva[i] = false;
+      for (int j = i / 12 * 12; j < i / 12 * 12 + 12; j++) {
+        enemigo[j].v *= pow(3, 1.0 / 11.0);
+      }
       if (enemigo[i].tipo == 1 || enemigo[i].tipo == 2 && enemigo[i].hiddenValue == 9) {
         if (Puntos >= 100) {
           Puntos -= 100;
@@ -40,10 +42,10 @@ void perderVida(int i) {
 // ---------- Disparos y colisiones ----------
 
 void actualizarDisparos() {
+  strokeWeight(2);
   for (int i = 0; i < cargadorAUG; i++) {
     if (balaAUGActiva[i]) {
       stroke(#80C0FF);
-      strokeWeight(2);
       fill(#4080D2);
       ellipse(balaAUGX[i], balaAUGY[i], 6, 12);
       if (!juegoPausado) {
@@ -56,19 +58,21 @@ void actualizarDisparos() {
   }
   for (int i = 0; i < maxEnemigos; i++) {
     if (balaEnemigoActiva[i]) {
-      strokeWeight(2);
       if (enemigo[i].tipo == 1) {
+        // Círculo: cura.
         stroke(#80FF80);
         fill(#40D240);
-        quad(balaEnemigoX[i], balaEnemigoY[i] - 6, balaEnemigoX[i] + 6, balaEnemigoY[i], balaEnemigoX[i], balaEnemigoY[i] + 6, balaEnemigoX[i] - 6, balaEnemigoY[i]);
+        circle(balaEnemigoX[i], balaEnemigoY[i], 12);
       } else if (enemigo[i].tipo == 2) {
+        // Cuadrado: bloquea el arma.
         stroke(#C0C0C0);
         fill(#808080);
-        square(balaEnemigoX[i], balaEnemigoY[i], 12);
+        square(balaEnemigoX[i], balaEnemigoY[i], 10);
       } else {
+        // Triángulo hacia abajo: daño.
         stroke(#FF8080);
         fill(#D24040);
-        circle(balaEnemigoX[i], balaEnemigoY[i], 12);
+        triangle(balaEnemigoX[i] - 6, balaEnemigoY[i] - 4, balaEnemigoX[i] + 6, balaEnemigoY[i] - 4, balaEnemigoX[i], balaEnemigoY[i] + 8);
       }
       if (!juegoPausado) {
         balaEnemigoY[i] += velocidadBalaEnemigo[i];
@@ -107,8 +111,12 @@ void detectarImpactos() {
       if (enemigo[i].tipo == 1) {
         AUG.vidas = min(3, AUG.vidas + 1);
       } else if (enemigo[i].tipo == 2 && enemigo[i].hiddenValue == 10) {
-        AUG.inicioCooldown = millis();
-        AUG.cooldown = 8000;
+        if (escudoActivo) {
+          escudoActivo = false;
+        } else {
+          AUG.inicioCooldown = millis();
+          AUG.cooldown = 4000;
+        }
       } else if (enemigo[i].tipo == 3) {
         perderVida(-1);
       }
@@ -126,6 +134,8 @@ void detectarChoques() {
         escudoActivo = true;
       } else if (enemigo[i].tipo == 3 || enemigo[i].tipo == 2 && enemigo[i].hiddenValue == 10) {
         perderVida(-1);
+      } else {
+        verificada[i] = true;
       }
     }
   }

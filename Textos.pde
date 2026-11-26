@@ -57,15 +57,21 @@ void crearTextos() {
   }
   textoJuego = new Texto(224, 1020, str(Puntos), letraT2, #FFFFFF, fuenteBoton, LEFT, CENTER);
   textoInstrucciones = new Texto[] {
-    new Texto(960, posicion(0, 320, letraN + espacioP), "HOW TO PLAY", letraT1, #FFE600, fuenteBoton, CENTER, CENTER),
-    new Texto(960, posicion(2, 320, letraN + espacioP), "CONTROLES", letraT2, #00FFFF, fuenteBoton, CENTER, CENTER),
-    new Texto(960, posicion(3, 320, letraN + espacioP), "- Moverte: teclas W, A, S, D o flechas de dirección", letraN, #FFFFFF, fuenteBoton, LEFT, CENTER),
-    new Texto(960, posicion(4, 320, letraN + espacioP), "- Disparar / Acción: barra espaciadora", letraN, #FFFFFF, fuenteBoton, LEFT, CENTER),
-    new Texto(960, posicion(5, 320, letraN + espacioP), "- Pausar: tecla ENTER o botón ||", letraN, #FFFFFF, fuenteBoton, LEFT, CENTER),
-    new Texto(960, posicion(7, 320, letraN + espacioP), "FILTRADO DE MENSAJES", letraT2, #00FFFF, fuenteBoton, CENTER, CENTER),
-    new Texto(960, posicion(8, 320, letraN + espacioP), "Y BIENESTAR DIGITAL", letraT2, #00FFFF, fuenteBoton, CENTER, CENTER),
-    new Texto(960, posicion(9, 320, letraN + espacioP), "Pilota tu nave y filtra el contenido cibernético que llega a la pantalla:", letraN, #FFFFFF, fuenteBoton, CENTER, CENTER),
-    new Texto(960, posicion(11, 320, letraN + espacioP), "¡Mantén el equilibrio cibernético y supera el puntaje máximo!", letraS, #00FFFF, fuenteBoton, CENTER, CENTER)
+    new Texto(960, posicion(0, 224, letraN + espacioP), "HOW TO PLAY", letraT1, #FFE600, fuenteBoton, CENTER, CENTER),
+    new Texto(960, posicion(2, 224, letraN + espacioP), "CONTROLES", letraT3, #00FFFF, fuenteBoton, CENTER, CENTER),
+    new Texto(960, posicion(3, 224, letraN + espacioP), "- Moverte: teclas WASD o flechas de dirección", letraN, #FFFFFF, fuenteBoton, LEFT, CENTER),
+    new Texto(960, posicion(4, 224, letraN + espacioP), "- Disparar: barra espaciadora", letraN, #FFFFFF, fuenteBoton, LEFT, CENTER),
+    new Texto(960, posicion(5, 224, letraN + espacioP), "- Pausar: tecla ENTER o botón ||", letraN, #FFFFFF, fuenteBoton, LEFT, CENTER),
+    new Texto(960, posicion(7, 224, letraN + espacioP), "NAVES", letraT3, #00FFFF, fuenteBoton, CENTER, CENTER),
+    new Texto(960, posicion(8, 224, letraN + espacioP), "Verde: aliada. Sus disparos te curan y tocarla te da escudo.", letraN, #80FF80, fuenteBoton, CENTER, CENTER),
+    new Texto(960, posicion(9, 224, letraN + espacioP), "Gris: inocente o enemiga encubierta. Tócala para descubrirlo:", letraN, #C0C0C0, fuenteBoton, CENTER, CENTER),
+    new Texto(960, posicion(10, 224, letraN + espacioP), "si es inocente, se vuelve semitransparente; si no, te hace daño.", letraN, #C0C0C0, fuenteBoton, CENTER, CENTER),
+    new Texto(960, posicion(11, 224, letraN + espacioP), "Las encubiertas además disparan balas que bloquean tu arma.", letraN, #C0C0C0, fuenteBoton, CENTER, CENTER),
+    new Texto(960, posicion(12, 224, letraN + espacioP), "Roja: enemiga. Sus disparos te quitan una vida.", letraN, #FF8080, fuenteBoton, CENTER, CENTER),
+    new Texto(960, posicion(13, 224, letraN + espacioP), "Derribar rojas o encubiertas te suma 100 puntos.", letraN, #FFFFFF, fuenteBoton, CENTER, CENTER),
+    new Texto(960, posicion(14, 224, letraN + espacioP), "Derribar aliadas o inocentes te resta 100 y una vida.", letraN, #FFFFFF, fuenteBoton, CENTER, CENTER),
+    new Texto(960, posicion(15, 224, letraN + espacioP), "El escudo aguanta un golpe. ¡Atento a las que bajan en picada!", letraN, #FFFFFF, fuenteBoton, CENTER, CENTER),
+    new Texto(960, posicion(16, 224, letraN + espacioP), "¡Filtra el contenido y cuida tu bienestar digital!", letraS, #00FFFF, fuenteBoton, CENTER, CENTER)
   };
   textFont(fuenteBoton, escalar(letraN));
   float anchoLista = 0;

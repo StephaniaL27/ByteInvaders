@@ -23,7 +23,7 @@ class Nave {
   }
 
   void dibujarNave() {
-    if (!juegoPausado && frameCount % intervaloEstrellas == 0) {
+    if (!juegoPausado && frameCount % 6 == 0) {
       frameActual = (frameActual + 1) % framesNaves[tipo].length;
     }
     image(framesNaves[tipo][frameActual], x, y, 128, 128);

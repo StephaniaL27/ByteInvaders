@@ -10,7 +10,7 @@ Nave AUG;
 int cargadorAUG = 15;
 int indiceDisparoAUG = 0;
 int balasPendientesAUG = 0;
-float velocidadBalaAUG = 20;
+float velocidadBalaAUG = 16;
 boolean[] balaAUGActiva = new boolean[cargadorAUG];
 float[] balaAUGX = new float[cargadorAUG];
 float[] balaAUGY = new float[cargadorAUG];
